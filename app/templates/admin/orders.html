@@ -1,40 +1,80 @@
-{% extends 'layout_admin.html' %} {% block title %}Objednávky zákazníků{% endblock %}
-{% block content %} {% block extra_css %}
+{% extends 'layout_admin.html' %} {% block title %}Objednávky zákazníků{%
+endblock %} {% block content %}
+<h1>Objednávky zákazníků</h1>
+
+<!-- DataTables CSS -->
 <link
   rel="stylesheet"
-  href="{{ url_for('static', filename='css/dashboard.css') }}"
+  href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
 />
-{% endblock %}
 
-<h2>Objednávky zákazníků</h2>
-
-{% if orders %}
-<table>
+<table id="orders-table" class="display">
   <thead>
     <tr>
       <th>ID</th>
+      <th>Číslo objednávky</th>
       <th>Zákazník</th>
       <th>Email</th>
       <th>Adresa</th>
       <th>Produkt</th>
       <th>Množství</th>
       <th>Datum</th>
+      <th>Faktura</th>
+      <th>Stav</th>
+    </tr>
+    <tr>
+      <!-- 🔍 Filtrovací pole v hlavičce každého sloupce -->
+      <th><input type="text" placeholder="Hledat ID" /></th>
+      <th><input type="text" placeholder="Hledat objednávku" /></th>
+      <th><input type="text" placeholder="Hledat jméno" /></th>
+      <th><input type="text" placeholder="Hledat email" /></th>
+      <th><input type="text" placeholder="Hledat adresu" /></th>
+      <th><input type="text" placeholder="Hledat produkt" /></th>
+      <th><input type="text" placeholder="Množství" /></th>
+      <th><input type="text" placeholder="Datum" /></th>
+      <th><input type="text" placeholder="Faktura" /></th>
+      <th><input type="text" placeholder="Stav" /></th>
     </tr>
   </thead>
   <tbody>
     {% for order in orders %}
     <tr>
       <td>{{ order.id }}</td>
+      <td>ORD{{ "%03d"|format(order.id) }}</td>
+
       <td>{{ order.name }}</td>
       <td>{{ order.email }}</td>
       <td>{{ order.address }}</td>
       <td>{{ order.product.name }}</td>
       <td>{{ order.quantity }}</td>
-      <td>{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+      <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+      <td>F{{ '%03d' % order.id }}</td>
+      <td>{{ order.status if order.status else 'Nová' }}</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
-{% else %}
-<p>Žádné objednávky zatím nejsou.</p>
-{% endif %} {% endblock %}
+
+<!-- jQuery & DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    // Inicializace tabulky
+    var table = $("#orders-table").DataTable({
+      orderCellsTop: true,
+      fixedHeader: true,
+    });
+
+    // Pro každý input v hlavičce vytvoří filtr
+    $("#orders-table thead tr:eq(1) th").each(function (i) {
+      $("input", this).on("keyup change", function () {
+        if (table.column(i).search() !== this.value) {
+          table.column(i).search(this.value).draw();
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

@@ -1,144 +1,151 @@
-/* === Admin Dashboard Styles === */
 
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
-  background-color: #f8f9fa;
-  color: #000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f9;
+  color: #333;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 30px auto;
-  padding: 30px;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+.dashboard-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
-h1,
-h2 {
-  color: #222;
-  margin-bottom: 20px;
+.dashboard-container h2 {
+  margin-bottom: 30px;
+  font-size: 28px;
+  text-align: center;
 }
 
-a.btn {
-  display: inline-block;
-  padding: 10px 18px;
+.dashboard-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.action-card {
+  flex: 1;
+  min-width: 220px;
   background-color: #007bff;
   color: #fff;
-  border-radius: 6px;
   text-decoration: none;
-  font-weight: bold;
-  margin-bottom: 20px;
+  padding: 25px 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  transition: background 0.3s ease;
+  text-align: center;
 }
 
-a.btn:hover {
+.action-card:hover {
   background-color: #0056b3;
 }
 
-/* NavBar */
-.nav-links {
-  background-color: #343a40;
-  padding: 15px 30px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 20px;
-  border-bottom: 3px solid #007bff;
+.action-card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
 }
 
-.nav-links a {
-  color: #fff;
-  font-weight: bold;
-  text-decoration: none;
-  padding: 8px 12px;
-  transition: background-color 0.3s;
-}
-
-.nav-links a:hover {
-  background-color: #495057;
-  border-radius: 4px;
-}
-
-/* Flash zprávy */
-.flash-message.success {
-  color: #28a745;
+.product-section h3 {
+  font-size: 22px;
   margin-bottom: 15px;
 }
 
-.flash-message.error {
-  color: #dc3545;
-  margin-bottom: 15px;
-}
-
-/* Styl pro tabulky */
-table {
+.product-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 25px;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
 
-table th {
-  background-color: #007bff;
-  color: white;
+.product-table th,
+.product-table td {
   padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
   text-align: left;
 }
 
-table td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #ddd;
+.product-table th {
+  background-color: #f0f0f0;
+  font-weight: 600;
 }
 
-table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-table img {
-  max-width: 80px;
-  border-radius: 6px;
-}
-
-/* Formuláře */
-form input,
-form select,
-form textarea {
-  padding: 10px;
-  margin-bottom: 15px;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-form button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 16px;
+.product-table td a,
+.product-table td button {
+  color: #007bff;
+  text-decoration: none;
+  background: none;
   border: none;
-  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
+  font-size: 14px;
 }
 
-form button:hover {
-  background-color: #0056b3;
-}
-.btn-sm {
-  padding: 6px 10px;
-  font-size: 0.85rem;
-  margin-right: 5px;
-  border-radius: 4px;
+.product-table td a:hover,
+.product-table td button:hover {
+  text-decoration: underline;
 }
 
-.btn-sm.danger {
-  background-color: #dc3545;
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
 }
 
-.btn-sm.danger:hover {
-  background-color: #c82333;
+.orders-table th, .orders-table td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: center;
 }
+
+.orders-table th {
+    background-color: #f4f4f4;
+}
+
+.orders-table tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.orders-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.export-buttons {
+    margin-bottom: 15px;
+}
+
+.export-buttons form {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.btn {
+    background-color: #1976d2;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn:hover {
+    background-color: #1565c0;
+}
+
+.small-btn {
+    padding: 5px 10px;
+    font-size: 13px;
+}
+
+.orders-table select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+

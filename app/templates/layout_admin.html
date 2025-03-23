@@ -2,27 +2,101 @@
 <html lang="cs">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Admin Panel{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Vlastní CSS -->
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='admin/css/dashboard.css') }}"
+      href="{{ url_for('static', filename='css/layout_admin.css') }}"
     />
+
+    {% block head %}{% endblock %}
   </head>
   <body>
-    <div class="nav-links">
-      <a href="{{ url_for('admin.admin_dashboard') }}">🖥 Dashboard</a>
-      <a href="{{ url_for('admin.view_orders') }}">📦 Objednávky</a>
-      <a href="{{ url_for('admin.admin_logout') }}">🚪 Odhlásit</a>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('admin.dashboard') }}"
+          >🛠 Admin Panel</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#adminNavbar"
+          aria-controls="adminNavbar"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="adminNavbar">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin.dashboard') }}"
+                >Dashboard</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin.orders') }}"
+                >Objednávky</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin.products') }}"
+                >Produkty</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin.add_product') }}"
+                >+ Přidat produkt</a
+              >
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Odhlásit se</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- OBSAH STRÁNKY -->
+    <div class="container mt-4">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div
+        class="alert alert-{{ category }} alert-dismissible fade show"
+        role="alert"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
     </div>
 
-    <!-- Flash zprávy -->
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %}
-    <div class="flash-container">
-      {% for category, message in messages %}
-      <div class="flash-message {{ category }}">{{ message }}</div>
-      {% endfor %}
-    </div>
-    {% endif %} {% endwith %} {% block content %}{% endblock %}
+    <!-- FOOTER -->
+    <footer class="text-center py-4 text-muted">
+      <small>&copy; {{ current_year or 2025 }} Admin Panel</small>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% block scripts %}{% endblock %}
   </body>
 </html>

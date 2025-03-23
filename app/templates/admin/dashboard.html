@@ -1,77 +1,73 @@
-{% extends "layout_admin.html" %} {% block extra_css %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/dashboard.css') }}"
-/>
-{% endblock %} {% block content %}
-<div class="container">
-  <h1>Admin Dashboard</h1>
+{% extends "layout_admin.html" %} {% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="admin-container">
+  <h2 class="mb-4">Produkty</h2>
 
-  <a href="{{ url_for('main.add_product') }}" class="btn"
-    >➕ Přidat nový produkt</a
+  <a href="{{ url_for('admin.add_product') }}" class="btn btn-success mb-3"
+    >+ Přidat nový produkt</a
   >
 
-  <hr />
-
-  <h2>Seznam produktů</h2>
-
   {% if products %}
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>Název</th>
-          <th>Popis</th>
-          <th>Cena</th>
-          <th>Obrázek</th>
-          <th>Sklad</th>
-          <th>Akce</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for product in products %}
-        <tr>
-          <td>{{ product.name }}</td>
-          <td>{{ product.description }}</td>
-          <td>{{ product.price }} Kč</td>
-          <td>
-            {% if product.image_filename %}
-            <img
-              src="{{ url_for('static', filename='product-images/' ~ product.image_filename) }}"
-              alt="obrázek produktu"
-            />
-            {% else %}
-            <em>žádný obrázek</em>
-            {% endif %}
-          </td>
-          <td>{{ product.stock }}</td>
-          <td>
-            <a
-              href="{{ url_for('main.edit_product', product_id=product.id) }}"
-              class="btn btn-sm"
-              >✏️ Upravit</a
+  <table
+    class="table table-bordered table-hover table-striped align-middle bg-white shadow-sm"
+  >
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Název</th>
+        <th>Popis</th>
+        <th>Cena</th>
+        <th>Sklad</th>
+        <th>Obrázek</th>
+        <th>Akce</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <td>{{ product.id }}</td>
+        <td>{{ product.name }}</td>
+        <td>
+          {{ product.description[:80] }}{% if product.description|length > 80
+          %}...{% endif %}
+        </td>
+        <td>{{ product.price }} RUB</td>
+        <td>{{ product.stock }} RUB</td>
+        <td>
+          {% if product.image_filename %}
+          <img
+            src="{{ url_for('static', filename='product-images/' ~ product.image_filename) }}"
+            alt="{{ product.name }}"
+            style="width: 60px; height: auto; border-radius: 4px"
+          />
+          {% else %} — {% endif %}
+        </td>
+        <td class="text-nowrap">
+          <a
+            href="{{ url_for('admin.edit_product', product_id=product.id) }}"
+            class="btn btn-sm btn-primary"
+            >Upravit</a
+          >
+          <form
+            action="{{ url_for('admin.delete_product', product_id=product.id) }}"
+            method="POST"
+            style="display: inline-block"
+          >
+            <button
+              type="submit"
+              class="btn btn-sm btn-danger"
+              onclick="return confirm('Opravdu smazat produkt?')"
             >
-            <form
-              action="{{ url_for('main.delete_product', product_id=product.id) }}"
-              method="POST"
-              style="display: inline"
-            >
-              <button
-                type="submit"
-                onclick="return confirm('Opravdu smazat produkt?')"
-                class="btn btn-sm danger"
-              >
-                🗑️ Smazat
-              </button>
-            </form>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+              Smazat
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
   {% else %}
-  <p>Žádné produkty zatím nejsou.</p>
+  <div class="alert alert-info">Žádné produkty nebyly nalezeny.</div>
   {% endif %}
 </div>
 {% endblock %}

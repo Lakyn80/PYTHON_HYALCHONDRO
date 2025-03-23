@@ -1,9 +1,24 @@
 from .extensions import db
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Email, Length, EqualTo
 
 class AdminUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
+
+class AdminRegisterForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Heslo', validators=[DataRequired(), Length(min=6)])
+    confirm = PasswordField('Potvrdit heslo', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Registrovat')
+
+class AdminLoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Heslo', validators=[DataRequired()])
+    submit = SubmitField('Přihlásit se')
+
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)

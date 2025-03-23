@@ -12,12 +12,15 @@ is_landing = True %} {% block extra_css %}
   {% else %} Přihlášen: {{ session.customer_email }} {% endif %}
 </div>
 
-<div class="cta-container">
-  <h1>Objevte naši nabídku produktů</h1>
-  <a href="{{ url_for('client.product_detail', product_id=1) }}" class="cta-btn">Zobrazit produkt</a>
-
-    
-  </a>
-  
+<div class="cta-top-right">
+  <h1>
+    "Комплексная <br />
+    поддержка <br />
+    суставов"
+  </h1>
+  <a href="{{ url_for('client.product_detail', product_id=1) }}" class="cta-btn"
+    >👉 Купить</a
+  >
 </div>
+
 {% endblock %}

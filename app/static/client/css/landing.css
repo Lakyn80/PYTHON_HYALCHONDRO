@@ -5,8 +5,10 @@ body.landing {
     center fixed;
   background-size: cover;
   font-family: Arial, sans-serif;
+  color: white;
 }
 
+/* CTA kontejner uprostřed (zůstává pro hlavní středovou výzvu) */
 .cta-container {
   position: absolute;
   top: 50%;
@@ -15,6 +17,7 @@ body.landing {
   text-align: center;
 }
 
+/* Tlačítko CTA */
 .cta-btn {
   display: inline-block;
   margin-top: 20px;
@@ -32,22 +35,107 @@ body.landing {
   color: #333;
 }
 
+/* Login odkazy vpravo nahoře */
 .login-links {
   position: absolute;
   top: 20px;
   right: 30px;
   font-size: 16px;
-  font: optional;
   color: white;
 }
 
 .login-links a {
   color: white;
-
   text-decoration: none;
   margin-left: 15px;
 }
 
 .login-links a:hover {
   text-decoration: underline;
+}
+
+/* 📦 NOVÝ blok CTA textu + tlačítka napravo nahoře */
+.cta-top-right {
+  position: absolute;
+  top: 80px;
+  right: 50px;
+  text-align: right;
+  z-index: 100;
+}
+
+.cta-top-right h2 {
+  margin: 0;
+  font-size: 20px;
+  color: white;
+  font-family: Poppins, sans-serif;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Přidání stínu textu */
+}
+
+.cta-top-right .cta-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: white;
+  color: black;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+.cta-top-right .cta-btn:hover {
+  background-color: #bee262;
+  color: #333;
+}
+
+.cta-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 15px 30px;
+  background: linear-gradient(90deg, #4caf50, #2196f3); /* Gradientní pozadí */
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-family: Poppins, sans-serif;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Přidání stínu textu */
+  font-weight: bold;
+  border-radius: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Jemný stín */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Přechod pro efekty */
+}
+
+.cta-btn:hover {
+  transform: scale(1.1); /* Zvětšení při najetí */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Zvýraznění stínu */
+  background: linear-gradient(90deg, #2196f3, #4caf50); /* Obrácený gradient */
+}
+h1 {
+  font-size: 60px;
+  margin: 0;
+  font-family: Poppins, sans-serif;
+  color: rgb(37, 195, 44);
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Přidání stínu textu */
+  background: linear-gradient(
+    90deg,
+    rgb(93, 4, 4),
+    /* Bílá barva na začátku */ rgb(219, 18, 45),
+    rgb(202, 232, 6),
+    rgb(255, 255, 255) /* Bílá barva na konci */
+  ); /* Přechod barev */
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; /* Efekt přechodu na textu */
+  animation: glow 3s infinite alternate; /* Animace */
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5), 0 0 15px rgb(255, 255, 255),
+      0 0 25px rgb(151, 5, 24), 0 0 35px rgb(0, 128, 255);
+  }
+  to {
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5), 0 0 20px rgb(255, 255, 255),
+      0 0 30px rgb(0, 128, 255), 0 0 40px rgb(219, 18, 45);
+  }
 }

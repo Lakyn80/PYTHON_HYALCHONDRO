@@ -1,0 +1,16 @@
+{% extends "layout_client.html" %} {% block title %}Přihlášení zákazníka{%
+endblock %} {% block content %}
+<h2>Přihlášení zákazníka</h2>
+<form method="POST">
+  {{ form.hidden_tag() }} {{ form.email.label }}<br />
+  {{ form.email(size=32) }}<br /><br />
+  {{ form.password.label }}<br />
+  {{ form.password(size=32) }}<br /><br />
+  {{ form.submit() }}
+</form>
+
+<p>
+  Nemáte ještě účet?
+  <a href="{{ url_for('client.register_customer') }}">Zaregistrujte se</a>
+</p>
+{% endblock %}

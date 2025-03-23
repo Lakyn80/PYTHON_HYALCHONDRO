@@ -1,10 +1,18 @@
-<!DOCTYPE html>
-<html lang="cs">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Pokladna</title>
-  </head>
-  <body>
-    <h1>Pokračuj k platbě</h1>
-  </body>
-</html>
+{% extends "layout_client.html" %} {% block title %}Pokladna{% endblock %} {%
+block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/checkout.css') }}"
+/>
+{% endblock %} {% block content %}
+
+<h2>Pokladna</h2>
+<form method="POST">
+  {{ form.hidden_tag() }}
+  <div>{{ form.name.label }} {{ form.name(size=40) }}</div>
+  <div>{{ form.email.label }} {{ form.email(size=40) }}</div>
+  <div>{{ form.address.label }} {{ form.address(rows=4, cols=40) }}</div>
+  <div>{{ form.payment_method.label }} {{ form.payment_method() }}</div>
+  <div>{{ form.submit() }}</div>
+</form>
+{% endblock %}

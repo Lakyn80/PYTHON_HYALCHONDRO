@@ -1,0 +1,32 @@
+.client-navbar {
+  background-color: #222;
+  padding: 12px 30px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.client-navbar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+}
+
+.client-navbar li {
+  display: inline;
+}
+
+.client-navbar a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.client-navbar a:hover {
+  color: #e2f110;
+}

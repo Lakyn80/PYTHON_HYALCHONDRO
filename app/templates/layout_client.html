@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Hyalchondro{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='client/css/layout.css') }}"
+    />
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body class="{% if is_landing %}landing{% endif %}">
+    {% if not is_landing %}
+    <nav class="navbar">
+      <a href="{{ url_for('client.index') }}">🏠 Domů</a>
+      <a href="{{ url_for('client.cart') }}">🛒 Košík</a>
+      <a href="{{ url_for('client.checkout') }}">💳 Pokladna</a>
+      <a href="{{ url_for('client.index') }}">📦 Produkty</a>
+
+      {% if session.customer_logged_in %}
+      <span>Přihlášen: {{ session.customer_email }}</span>
+      <a href="{{ url_for('client.customer_orders') }}">📦 Moje objednávky</a>
+      <a href="{{ url_for('client.profile') }}">👤 Profil</a>
+      <a href="{{ url_for('client.logout_customer') }}">🚪 Odhlásit</a>
+      {% else %}
+      <a href="{{ url_for('client.login_customer') }}">Přihlásit</a>
+      <a href="{{ url_for('client.register_customer') }}">Registrovat</a>
+      {% endif %}
+    </nav>
+    {% endif %} {% if not is_landing %} {% with messages =
+    get_flashed_messages(with_categories=true) %} {% if messages %} {% for
+    category, message in messages %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %} {% endif %} {% endwith %} {% endif %} {% block content %}{%
+    endblock %}
+  </body>
+</html>

@@ -1,10 +1,54 @@
-<!DOCTYPE html>
-<html lang="cs">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Košík</title>
-  </head>
-  <body>
-    <h1>Tvoje produkty v košíku</h1>
-  </body>
-</html>
+{% extends "layout_client.html" %} {% block title %}Košík{% endblock %} {% block
+extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/cart.css') }}"
+/>
+{% endblock %} {% block content %}
+
+
+<div class="container">
+  <h1>Košík</h1>
+  {% if products %}
+  <form method="POST" action="{{ url_for('client.update_cart') }}">
+    <table>
+      <thead>
+        <tr>
+          <th>Produkt</th>
+          <th>Množství</th>
+          <th>Cena</th>
+          <th>Akce</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in products %}
+        <tr>
+          <td>{{ item.product.name }}</td>
+          <td>
+            <input
+              type="number"
+              name="quantity_{{ item.product.id }}"
+              value="{{ item.quantity }}"
+              min="1"
+            />
+          </td>
+          <td>{{ item.total }} Kč</td>
+          <td>
+            <a
+              href="{{ url_for('client.remove_from_cart', product_id=item.product.id) }}"
+              >Odebrat</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit">Aktualizovat košík</button>
+  </form>
+  <p><strong>Celkem:</strong> {{ total_price }} Kč</p>
+  <a href="{{ url_for('client.checkout') }}" class="btn">Přejít k platbě</a>
+  {% else %}
+  <p>Košík je prázdný.</p>
+  {% endif %}
+</div>
+{% endblock %}

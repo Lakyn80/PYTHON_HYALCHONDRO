@@ -1,0 +1,11 @@
+<!-- templates/client/order_success.html -->
+{% extends "layout_client.html" %} {% block title %}Objednávka úspěšná{%
+endblock %} {% block content %}
+
+<h2>Děkujeme za Vaši objednávku!</h2>
+<p>Potvrzení bylo odesláno na Váš e-mail.</p>
+<a href="{{ url_for('client.index') }}">Zpět na hlavní stránku</a>
+
+
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "layout_client.html" %} {% block title %}Můj profil{% endblock %} {%
+block content %}
+
+<div class="profile-container">
+  <h2>👤 Můj profil</h2>
+
+  <form method="POST">
+    {{ form.hidden_tag() }}
+
+    <div>
+      <label>{{ form.name.label }}</label><br />
+      {{ form.name(size=40) }}
+    </div>
+    <div>
+      <label>{{ form.surname.label }}</label><br />
+      {{ form.surname(size=40) }}
+    </div>
+    <div>
+      <label>{{ form.email.label }}</label><br />
+      {{ form.email(size=40) }}
+    </div>
+    <div>
+      <label>{{ form.address.label }}</label><br />
+      {{ form.address(size=40) }}
+    </div>
+    <div>
+      <label>{{ form.phone.label }}</label><br />
+      {{ form.phone(size=40) }}
+    </div>
+
+    <div style="margin-top: 15px">{{ form.submit(class="btn") }}</div>
+  </form>
+</div>
+
+{% endblock %}

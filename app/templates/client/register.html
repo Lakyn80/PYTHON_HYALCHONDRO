@@ -1,0 +1,20 @@
+{% extends "layout_client.html" %} {% block title %}Registrace zákazníka{%
+endblock %} {% block content %}
+<h2>Registrace zákazníka</h2>
+<form method="POST">
+  {{ form.hidden_tag() }} {{ form.name.label }}<br />
+  {{ form.name(size=32) }}<br /><br />
+  {{ form.email.label }}<br />
+  {{ form.email(size=32) }}<br /><br />
+  {{ form.password.label }}<br />
+  {{ form.password(size=32) }}<br /><br />
+  {{ form.confirm_password.label }}<br />
+  {{ form.confirm_password(size=32) }}<br /><br />
+  {{ form.submit() }}
+</form>
+
+<p>
+  Máte už účet?
+  <a href="{{ url_for('client.login_customer') }}">Přihlaste se</a>
+</p>
+{% endblock %}

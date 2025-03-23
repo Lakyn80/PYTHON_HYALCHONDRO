@@ -1,0 +1,40 @@
+{% extends 'layout_admin.html' %} {% block title %}Objednávky zákazníků{% endblock %}
+{% block content %} {% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/dashboard.css') }}"
+/>
+{% endblock %}
+
+<h2>Objednávky zákazníků</h2>
+
+{% if orders %}
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Zákazník</th>
+      <th>Email</th>
+      <th>Adresa</th>
+      <th>Produkt</th>
+      <th>Množství</th>
+      <th>Datum</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+    <tr>
+      <td>{{ order.id }}</td>
+      <td>{{ order.name }}</td>
+      <td>{{ order.email }}</td>
+      <td>{{ order.address }}</td>
+      <td>{{ order.product.name }}</td>
+      <td>{{ order.quantity }}</td>
+      <td>{{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Žádné objednávky zatím nejsou.</p>
+{% endif %} {% endblock %}

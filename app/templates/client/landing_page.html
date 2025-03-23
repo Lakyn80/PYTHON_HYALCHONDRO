@@ -1,12 +1,23 @@
-<!DOCTYPE html>
-<html lang="cs">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Landing Page</title>
-  </head>
-  <body>
-    <h1>Vítejte na našem e-shopu!</h1>
-    <p>Tohle je úvodní stránka.</p>
-    <a href="{{ url_for('main.admin_login') }}">Přejít na admin login</a>
-  </body>
-</html>
+{% extends "layout_client.html" %} {% block title %}Vítejte{% endblock %} {% set
+is_landing = True %} {% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='client/css/landing.css') }}"
+/>
+{% endblock %} {% block content %}
+<div class="login-links">
+  {% if not session.customer_logged_in %}
+  <a href="{{ url_for('client.login_customer') }}">Přihlášení</a>
+  <a href="{{ url_for('client.register_customer') }}">Registrace</a>
+  {% else %} Přihlášen: {{ session.customer_email }} {% endif %}
+</div>
+
+<div class="cta-container">
+  <h1>Objevte naši nabídku produktů</h1>
+  <a href="{{ url_for('client.product_detail', product_id=1) }}" class="cta-btn">Zobrazit produkt</a>
+
+    
+  </a>
+  
+</div>
+{% endblock %}

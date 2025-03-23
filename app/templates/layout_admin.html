@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Admin Panel{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='admin/css/dashboard.css') }}"
+    />
+  </head>
+  <body>
+    <div class="nav-links">
+      <a href="{{ url_for('admin.admin_dashboard') }}">🖥 Dashboard</a>
+      <a href="{{ url_for('admin.view_orders') }}">📦 Objednávky</a>
+      <a href="{{ url_for('admin.admin_logout') }}">🚪 Odhlásit</a>
+    </div>
+
+    <!-- Flash zprávy -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %} {% block content %}{% endblock %}
+  </body>
+</html>

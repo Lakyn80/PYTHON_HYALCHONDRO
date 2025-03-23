@@ -1,0 +1,53 @@
+body.landing {
+  margin: 0;
+  padding: 0;
+  background: url("/static/product-images/landing-bg.png") no-repeat center
+    center fixed;
+  background-size: cover;
+  font-family: Arial, sans-serif;
+}
+
+.cta-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.cta-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 15px 30px;
+  background-color: #ffffff;
+  color: #000;
+  text-decoration: none;
+  font-size: 18px;
+  border-radius: 30px;
+  transition: 0.3s ease;
+}
+
+.cta-btn:hover {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.login-links {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 16px;
+  font: optional;
+  color: white;
+}
+
+.login-links a {
+  color: white;
+
+  text-decoration: none;
+  margin-left: 15px;
+}
+
+.login-links a:hover {
+  text-decoration: underline;
+}

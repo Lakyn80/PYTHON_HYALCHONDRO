@@ -1,0 +1,66 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <h1>Admin Dashboard</h1>
+  <a href="{{ url_for('main.add_product') }}">➕ Přidat nový produkt</a>
+
+  <hr />
+
+  <h2>Seznam produktů</h2>
+
+  {% if products %}
+  <table border="1" cellpadding="10" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Název</th>
+        <th>Popis</th>
+        <th>Cena</th>
+        <th>Obrázek</th>
+        <th>Sklad</th>
+        <!-- ✅ Přidán sloupec pro počet -->
+        <th>Akce</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <td>{{ product.name }}</td>
+        <td>{{ product.description }}</td>
+        <td>{{ product.price }} Kč</td>
+        <td>
+          {% if product.image_filename %}
+          <img
+            src="{{ url_for('static', filename='product-images/' ~ product.image_filename) }}"
+            width="100"
+            alt="obrázek"
+          />
+          {% else %} žádný obrázek {% endif %}
+        </td>
+        <td>{{ product.stock }}</td>
+        <!-- ✅ Počet kusů skladem -->
+        <td>
+          <a href="{{ url_for('main.edit_product', product_id=product.id) }}"
+            >✏️ Upravit</a
+          >
+          |
+          <form
+            action="{{ url_for('main.delete_product', product_id=product.id) }}"
+            method="POST"
+            style="display: inline"
+          >
+            <button
+              type="submit"
+              onclick="return confirm('Opravdu smazat produkt?')"
+            >
+              🗑️ Smazat
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>Žádné produkty zatím nejsou.</p>
+  {% endif %}
+</div>
+{% endblock %}

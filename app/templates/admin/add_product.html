@@ -1,0 +1,23 @@
+{% extends "layout.html" %} {% block title %}Přidat produkt{% endblock %} {%
+block content %}
+<h2>Přidat nový produkt</h2>
+
+<form method="POST" enctype="multipart/form-data">
+  <label>Název produktu:</label><br />
+  <input type="text" name="name" required /><br /><br />
+
+  <label>Popis:</label><br />
+  <textarea name="description" required></textarea><br /><br />
+
+  <label>Cena:</label><br />
+  <input type="number" step="0.01" name="price" required /><br /><br />
+
+  <label>Sklad – počet kusů:</label><br />
+  <input type="number" name="stock" min="0" required /><br /><br />
+
+  <label>Obrázek:</label><br />
+  <input type="file" name="image" /><br /><br />
+
+  <button type="submit">Přidat produkt</button>
+</form>
+{% endblock %}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Admin Panel{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <!-- Admin menu -->
+      <nav>
+        {% if session.admin_logged_in %}
+        <a href="{{ url_for('main.admin_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('main.admin_logout') }}">Odhlásit se</a>
+        {% else %}
+        <a href="{{ url_for('main.admin_login') }}">Přihlášení</a>
+        <a href="{{ url_for('main.admin_register') }}">Registrace</a>
+        {% endif %}
+      </nav>
+
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>

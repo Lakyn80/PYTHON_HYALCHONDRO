@@ -90,3 +90,22 @@
   padding: 15px;
   border-radius: 4px;
 }
+.dark-mode-toggle {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.dark-mode-toggle .btn {
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+body .dark-mode-toggle .btn {
+  background-color: #fff;
+  color: #000;
+  border-color: #aaa;
+}

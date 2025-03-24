@@ -1,126 +1,114 @@
-{% extends 'layout_admin.html' %} 
-{% block title %}Objednávky zákazníků{% endblock %} 
-{% block content %}
-<h1>Objednávky zákazníků</h1>
+{% extends "layout_admin.html" %} {% block title %}Objednávky{% endblock %} {%
+block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/orders_table.css') }}"
+/>
+
+<h2 class="text-center mb-4">📋 Objednávky zákazníků</h2>
 
 <!-- DataTables CSS -->
 <link
   rel="stylesheet"
   href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
 />
-<!-- External CSS for table styling -->
-<link rel="stylesheet" href="/static/css/orders_table.css" />
+<link
+  rel="stylesheet"
+  href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css"
+/>
 
-<div class="navbar-container">
-  <div class="navbar">Navigační panel</div>
-</div>
-
-<table id="orders-table" class="display compact">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Objednávka</th>
-      <th>Zákazník</th>
-      <th>Email</th>
-      <th>Adresa</th>
-      <th>Produkt</th>
-      <th>Množství</th>
-      <th>Datum</th>
-      <th>Faktura</th>
-      <th>Stav</th>
-    </tr>
-    <tr>
-      <!-- Excel-like filter inputs -->
-      <th><input type="text" placeholder="Hledat ID" /></th>
-      <th><input type="text" placeholder="Hledat objednávku" /></th>
-      <th><input type="text" placeholder="Hledat zákazníka" /></th>
-      <th><input type="text" placeholder="Hledat email" /></th>
-      <th><input type="text" placeholder="Hledat adresu" /></th>
-      <th><input type="text" placeholder="Hledat produkt" /></th>
-      <th><input type="text" placeholder="Hledat množství" /></th>
-      <th><input type="text" placeholder="Hledat datum" /></th>
-      <th><input type="text" placeholder="Hledat fakturu" /></th>
-      <th><input type="text" placeholder="Hledat stav" /></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for order in orders %}
-    <tr>
-      <td>{{ order.id }}</td>
-      <td>ORD{{ "%03d"|format(order.id) }}</td>
-      <td>{{ order.name }}</td>
-      <td>{{ order.email }}</td>
-      <td>{{ order.address }}</td>
-      <td>{{ order.product.name }}</td>
-      <td>{{ order.quantity }}</td>
-      <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
-      <td>F{{ '%03d' % order.id }}</td>
-      <td>
-        <select class="status-select" data-order-id="{{ order.id }}">
-          <option value="Nová" {% if order.status == 'Nová' %}selected{% endif %}>Nová</option>
-          <option value="Zpracovává se" {% if order.status == 'Zpracovává se' %}selected{% endif %}>Zpracovává se</option>
-          <option value="Dokončená" {% if order.status == 'Dokončená' %}selected{% endif %}>Dokončená</option>
-          <option value="Zrušená" {% if order.status == 'Zrušená' %}selected{% endif %}>Zrušená</option>
-        </select>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<!-- jQuery & DataTables JS -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- jQuery + DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+
+<div class="orders-wrapper">
+  <table
+    id="orders-table"
+    class="display nowrap admin-table"
+    style="width: 100%"
+  >
+    <thead>
+      <tr>
+        <th>Faktura</th>
+        <th>Objednávka</th>
+        <th>Jméno</th>
+        <th>Email</th>
+        <th>Adresa</th>
+        <th>Produkt</th>
+        <th>Množství</th>
+        <th>Datum</th>
+        <th>Stav</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Faktura</th>
+        <th>Objednávka</th>
+        <th>Jméno</th>
+        <th>Email</th>
+        <th>Adresa</th>
+        <th>Produkt</th>
+        <th>Množství</th>
+        <th>Datum</th>
+        <th>Stav</th>
+      </tr>
+    </tfoot>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td>F{{ "%03d"|format(order.id) }}</td>
+        <td>ORD{{ "%03d"|format(order.id) }}</td>
+        <td>{{ order.name }}</td>
+        <td>{{ order.email }}</td>
+        <td>{{ order.address }}</td>
+        <td>{{ order.product.name }}</td>
+        <td>{{ order.quantity }}</td>
+        <td>{{ order.created_at.strftime('%d.%m.%Y') }}</td>
+        <td>
+          <span class="badge badge-{{ order.status | lower }}">
+            {{ order.status or "neuvedeno" }}
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 <script>
   $(document).ready(function () {
-    // Initialize DataTable with compact styling
-    var table = $("#orders-table").DataTable({
-      orderCellsTop: true,
-      fixedHeader: true,
-      paging: false, // Disable pagination for a smaller table
-      info: false, // Disable table info
+    $("#orders-table tfoot th").each(function () {
+      const title = $(this).text();
+      $(this).html('<input type="text" placeholder="Filtr ' + title + '" />');
     });
 
-    // Add Excel-like filters
-    $("#orders-table thead tr:eq(1) th").each(function (i) {
-      $("input", this).on("keyup change", function () {
-        if (table.column(i).search() !== this.value) {
-          table.column(i).search(this.value).draw();
-        }
-      });
+    const table = $("#orders-table").DataTable({
+      dom: "Bfrtip",
+      buttons: ["copy", "csv", "excel", "pdf", "print"],
+      responsive: true,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/cs.json",
+      },
+      initComplete: function () {
+        this.api()
+          .columns()
+          .every(function () {
+            const that = this;
+            $("input", this.footer()).on("keyup change", function () {
+              if (that.search() !== this.value) {
+                that.search(this.value).draw();
+              }
+            });
+          });
+      },
     });
-
-    // Handle status change
-    $(".status-select").on("change", function () {
-      var orderId = $(this).data("order-id");
-      var newStatus = $(this).val();
-
-      // Send AJAX request to update the status
-      $.ajax({
-        url: "/admin/update_order_status", // Replace with your actual endpoint
-        method: "POST",
-        data: {
-          order_id: orderId,
-          status: newStatus,
-        },
-        success: function (response) {
-          alert("Stav objednávky byl úspěšně aktualizován.");
-        },
-        error: function () {
-          alert("Došlo k chybě při aktualizaci stavu objednávky.");
-        },
-      });
-    });
-
-    // Adjust navbar width dynamically with table scrolling
-    function adjustNavbarWidth() {
-      var tableWidth = $("#orders-table").outerWidth();
-      $(".navbar-container").css("width", tableWidth + "px");
-    }
-
-    $(window).on("resize scroll", adjustNavbarWidth);
-    adjustNavbarWidth();
   });
 </script>
+
 {% endblock %}

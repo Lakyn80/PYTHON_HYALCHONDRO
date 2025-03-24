@@ -1,0 +1,194 @@
+/* ================================
+   💎 Pro-Level Shopping Cart CSS
+   ================================ */
+
+:root {
+  --primary-color: #007bff;
+  --primary-dark: #0056b3;
+  --secondary-color: #6c757d;
+  --secondary-dark: #5a6268;
+  --success-color: #28a745;
+  --danger-color: #e63946;
+  --bg-light: #f8f9fa;
+  --text-dark: #222;
+  --text-muted: #666;
+  --radius: 10px;
+  --transition: all 0.3s ease;
+  --shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.cart-wrapper {
+  max-width: 960px;
+  margin: 50px auto;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  color: var(--text-dark);
+}
+
+.cart-wrapper h1 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.cart-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+
+.cart-table th,
+.cart-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #eaeaea;
+  font-size: 17px;
+}
+
+.cart-table th {
+  background-color: var(--bg-light);
+  font-weight: 600;
+}
+
+.cart-table input[type="number"] {
+  width: 90px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+.cart-table input[type="number"]:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.cart-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.cart-total {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
+.cart-wrapper .btn-primary,
+.cart-wrapper .btn-secondary,
+.cart-wrapper .btn-success {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.cart-wrapper .btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+.cart-wrapper .btn-primary:hover {
+  background-color: var(--primary-dark);
+}
+
+.cart-wrapper .btn-secondary {
+  background-color: var(--secondary-color);
+  color: white;
+}
+.cart-wrapper .btn-secondary:hover {
+  background-color: var(--secondary-dark);
+}
+
+.cart-wrapper .btn-success {
+  background-color: var(--success-color);
+  color: white;
+}
+.cart-wrapper .btn-success:hover {
+  background-color: #218838;
+}
+
+.cart-empty {
+  text-align: center;
+  font-size: 22px;
+  color: var(--text-muted);
+  padding: 60px 0;
+}
+
+/* 📱 Responsive Breakpoints */
+@media (max-width: 768px) {
+  .cart-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cart-wrapper {
+    padding: 25px;
+  }
+
+  .cart-table th,
+  .cart-table td {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  .cart-wrapper h1 {
+    font-size: 26px;
+  }
+
+  .cart-wrapper .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* 🌙 Dark Mode Support */
+body.dark-mode .cart-wrapper {
+  background-color: #fefefe;
+  color: #111;
+}
+body.dark-mode .cart-table th {
+  background-color: #eeeeee;
+}
+body.dark-mode .cart-wrapper .btn-primary,
+body.dark-mode .cart-wrapper .btn-secondary,
+body.dark-mode .cart-wrapper .btn-success {
+  color: #fff;
+}
+.dark-mode-toggle {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.dark-mode-toggle .btn {
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+body .dark-mode-toggle .btn {
+  background-color: #fff;
+  color: #000;
+  border-color: #aaa;
+}
+
+body.dark-mode .dark-mode-toggle .btn {
+  background-color: #2c2c2c;
+  color: #f1f1f1;
+  border-color: #aaa;
+}

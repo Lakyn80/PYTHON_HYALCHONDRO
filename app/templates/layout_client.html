@@ -8,25 +8,52 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='client/css/layout.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='client/css/client-navbar.css') }}"
+    />
     {% block extra_css %}{% endblock %}
   </head>
   <body class="{% if is_landing %}landing{% endif %}">
     {% if not is_landing %}
-    <nav class="navbar">
-      <a href="{{ url_for('client.index') }}">🏠 Domů</a>
-      <a href="{{ url_for('client.cart') }}">🛒 Košík</a>
-      <a href="{{ url_for('client.checkout') }}">💳 Pokladna</a>
-      <a href="{{ url_for('client.index') }}">📦 Produkty</a>
+    <nav class="client-navbar">
+      <div class="navbar-container">
+        <div class="navbar-left">
+          
+        </div>
 
-      {% if session.customer_logged_in %}
-      <span>Přihlášen: {{ session.customer_email }}</span>
-      <a href="{{ url_for('client.customer_orders') }}">📦 Moje objednávky</a>
-      <a href="{{ url_for('client.profile') }}">👤 Profil</a>
-      <a href="{{ url_for('client.logout_customer') }}">🚪 Odhlásit</a>
-      {% else %}
-      <a href="{{ url_for('client.login_customer') }}">Přihlásit</a>
-      <a href="{{ url_for('client.register_customer') }}">Registrovat</a>
-      {% endif %}
+        <div class="navbar-right">
+          <button class="navbar-toggle" id="navbarToggle">☰</button>
+          <ul class="navbar-links" id="navbarLinks">
+            <li><a href="{{ url_for('client.index') }}">🏠 Domů</a></li>
+            <li><a href="{{ url_for('client.cart') }}">🛒 Košík</a></li>
+            <li><a href="{{ url_for('client.checkout') }}">💳 Pokladna</a></li>
+            <li><a href="{{ url_for('client.index') }}">📦 Produkty</a></li>
+
+            {% if session.customer_logged_in %}
+            <li><span>👤 {{ session.customer_email }}</span></li>
+            <li>
+              <a href="{{ url_for('client.customer_orders') }}"
+                >📦 Moje objednávky</a
+              >
+            </li>
+            <li><a href="{{ url_for('client.profile') }}">👤 Profil</a></li>
+            <li>
+              <a href="{{ url_for('client.logout_customer') }}">🚪 Odhlásit</a>
+            </li>
+            {% else %}
+            <li>
+              <a href="{{ url_for('client.login_customer') }}">🔐 Přihlásit</a>
+            </li>
+            <li>
+              <a href="{{ url_for('client.register_customer') }}"
+                >📝 Registrovat</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
     </nav>
     {% endif %} {% if not is_landing %} {% with messages =
     get_flashed_messages(with_categories=true) %} {% if messages %} {% for
@@ -34,5 +61,22 @@
     <div class="alert alert-{{ category }}">{{ message }}</div>
     {% endfor %} {% endif %} {% endwith %} {% endif %} {% block content %}{%
     endblock %}
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const toggle = document.getElementById("navbarToggle");
+        const links = document.getElementById("navbarLinks");
+
+        if (toggle && links) {
+          links.classList.toggle("show");
+          toggle.classList.toggle("open");
+        }
+
+        toggle.addEventListener("click", function () {
+          links.classList.toggle("show");
+          toggle.classList.toggle("open");
+        });
+      });
+    </script>
   </body>
 </html>

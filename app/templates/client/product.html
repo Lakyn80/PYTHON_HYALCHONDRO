@@ -6,35 +6,61 @@ endblock %} {% block extra_css %}
 />
 {% endblock %} {% block content %}
 
+<!-- 💡 Auto Dark Mode & Toggle Button -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.body.classList.add("dark-mode");
 
-<div class="product-detail">
-  <div class="product-image">
-    {% if product.image_filename %}
-    <img
-      src="{{ url_for('static', filename='product-images/' ~ product.image_filename) }}"
-      alt="{{ product.name }}"
-    />
-    {% endif %}
-  </div>
-  <div class="product-info">
-    <h2>{{ product.name }}</h2>
-    <p class="description">{{ product.description }}</p>
-    <p class="price"><strong>{{ product.price }} Kč</strong></p>
-    <form
-      action="{{ url_for('client.add_to_cart', product_id=product.id) }}"
-      method="POST"
-    >
-      <label for="quantity">Počet:</label>
-      <input
-        type="number"
-        name="quantity"
-        value="1"
-        min="1"
-        max="{{ product.stock }}"
-        required
+    const toggleBtn = document.getElementById("darkModeToggle");
+    if (toggleBtn) {
+      toggleBtn.textContent = "☀️ Light Mode";
+      toggleBtn.addEventListener("click", function () {
+        document.body.classList.toggle("dark-mode");
+        toggleBtn.textContent = document.body.classList.contains("dark-mode")
+          ? "☀️ Light Mode"
+          : "🌙 Dark Mode";
+      });
+    }
+  });
+</script>
+
+<!-- 💡 Toggle Button UI -->
+<div class="dark-mode-toggle text-end mb-4">
+  <button id="darkModeToggle" class="btn btn-outline-dark btn-sm">
+    🌙 Dark Mode
+  </button>
+</div>
+
+<div class="product-detail-wrapper container">
+  <div class="product-detail-grid">
+    <!-- Obrázek vlevo -->
+    <div class="product-image">
+      {% if product.image_filename %}
+      <img
+        src="{{ url_for('static', filename='product-images/' ~ product.image_filename) }}"
+        alt="{{ product.name }}"
       />
-      <button type="submit" class="btn">➕ Přidat do košíku</button>
-    </form>
+      {% endif %}
+    </div>
+
+    <!-- Popis vpravo -->
+    <div class="product-description">
+      <h1>{{ product.name }}</h1>
+      <div class="description-content">{{ product.description | safe }}</div>
+      <p class="product-price">{{ product.price }} RUB</p>
+
+      <form
+        action="{{ url_for('client.add_to_cart', product_id=product.id) }}"
+        method="POST"
+        class="product-form"
+      >
+        <label for="quantity">Množství:</label>
+        <input type="number" name="quantity" value="1" min="1" />
+        <button type="submit" class="btn btn-primary">
+          🛒 Přidat do košíku
+        </button>
+      </form>
+    </div>
   </div>
 </div>
 {% endblock %}

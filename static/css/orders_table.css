@@ -1,0 +1,41 @@
+/* Custom styling for a compact table */
+#orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#orders-table th,
+#orders-table td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+#orders-table th {
+  background-color: #f4f4f4;
+}
+#orders-table input {
+  width: 90%;
+  padding: 4px;
+  box-sizing: border-box;
+}
+#orders-table select {
+  width: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+/* Navbar container styling */
+.navbar-container {
+  overflow-x: auto; /* Allow horizontal scrolling if necessary */
+}
+
+/* Navbar styling */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #007bff; /* Change navbar color */
+  color: white;
+  padding: 10px;
+  text-align: center;
+  width: 100%; /* Ensure it stretches with the table */
+}

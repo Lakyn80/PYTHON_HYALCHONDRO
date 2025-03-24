@@ -1,5 +1,6 @@
-{% extends 'layout_admin.html' %} {% block title %}Objednávky zákazníků{%
-endblock %} {% block content %}
+{% extends 'layout_admin.html' %} 
+{% block title %}Objednávky zákazníků{% endblock %} 
+{% block content %}
 <h1>Objednávky zákazníků</h1>
 
 <!-- DataTables CSS -->
@@ -7,12 +8,18 @@ endblock %} {% block content %}
   rel="stylesheet"
   href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
 />
+<!-- External CSS for table styling -->
+<link rel="stylesheet" href="/static/css/orders_table.css" />
 
-<table id="orders-table" class="display">
+<div class="navbar-container">
+  <div class="navbar">Navigační panel</div>
+</div>
+
+<table id="orders-table" class="display compact">
   <thead>
     <tr>
       <th>ID</th>
-      <th>Číslo objednávky</th>
+      <th>Objednávka</th>
       <th>Zákazník</th>
       <th>Email</th>
       <th>Adresa</th>
@@ -23,17 +30,17 @@ endblock %} {% block content %}
       <th>Stav</th>
     </tr>
     <tr>
-      <!-- 🔍 Filtrovací pole v hlavičce každého sloupce -->
+      <!-- Excel-like filter inputs -->
       <th><input type="text" placeholder="Hledat ID" /></th>
       <th><input type="text" placeholder="Hledat objednávku" /></th>
-      <th><input type="text" placeholder="Hledat jméno" /></th>
+      <th><input type="text" placeholder="Hledat zákazníka" /></th>
       <th><input type="text" placeholder="Hledat email" /></th>
       <th><input type="text" placeholder="Hledat adresu" /></th>
       <th><input type="text" placeholder="Hledat produkt" /></th>
-      <th><input type="text" placeholder="Množství" /></th>
-      <th><input type="text" placeholder="Datum" /></th>
-      <th><input type="text" placeholder="Faktura" /></th>
-      <th><input type="text" placeholder="Stav" /></th>
+      <th><input type="text" placeholder="Hledat množství" /></th>
+      <th><input type="text" placeholder="Hledat datum" /></th>
+      <th><input type="text" placeholder="Hledat fakturu" /></th>
+      <th><input type="text" placeholder="Hledat stav" /></th>
     </tr>
   </thead>
   <tbody>
@@ -41,7 +48,6 @@ endblock %} {% block content %}
     <tr>
       <td>{{ order.id }}</td>
       <td>ORD{{ "%03d"|format(order.id) }}</td>
-
       <td>{{ order.name }}</td>
       <td>{{ order.email }}</td>
       <td>{{ order.address }}</td>
@@ -49,7 +55,14 @@ endblock %} {% block content %}
       <td>{{ order.quantity }}</td>
       <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
       <td>F{{ '%03d' % order.id }}</td>
-      <td>{{ order.status if order.status else 'Nová' }}</td>
+      <td>
+        <select class="status-select" data-order-id="{{ order.id }}">
+          <option value="Nová" {% if order.status == 'Nová' %}selected{% endif %}>Nová</option>
+          <option value="Zpracovává se" {% if order.status == 'Zpracovává se' %}selected{% endif %}>Zpracovává se</option>
+          <option value="Dokončená" {% if order.status == 'Dokončená' %}selected{% endif %}>Dokončená</option>
+          <option value="Zrušená" {% if order.status == 'Zrušená' %}selected{% endif %}>Zrušená</option>
+        </select>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
@@ -61,13 +74,15 @@ endblock %} {% block content %}
 
 <script>
   $(document).ready(function () {
-    // Inicializace tabulky
+    // Initialize DataTable with compact styling
     var table = $("#orders-table").DataTable({
       orderCellsTop: true,
       fixedHeader: true,
+      paging: false, // Disable pagination for a smaller table
+      info: false, // Disable table info
     });
 
-    // Pro každý input v hlavičce vytvoří filtr
+    // Add Excel-like filters
     $("#orders-table thead tr:eq(1) th").each(function (i) {
       $("input", this).on("keyup change", function () {
         if (table.column(i).search() !== this.value) {
@@ -75,6 +90,37 @@ endblock %} {% block content %}
         }
       });
     });
+
+    // Handle status change
+    $(".status-select").on("change", function () {
+      var orderId = $(this).data("order-id");
+      var newStatus = $(this).val();
+
+      // Send AJAX request to update the status
+      $.ajax({
+        url: "/admin/update_order_status", // Replace with your actual endpoint
+        method: "POST",
+        data: {
+          order_id: orderId,
+          status: newStatus,
+        },
+        success: function (response) {
+          alert("Stav objednávky byl úspěšně aktualizován.");
+        },
+        error: function () {
+          alert("Došlo k chybě při aktualizaci stavu objednávky.");
+        },
+      });
+    });
+
+    // Adjust navbar width dynamically with table scrolling
+    function adjustNavbarWidth() {
+      var tableWidth = $("#orders-table").outerWidth();
+      $(".navbar-container").css("width", tableWidth + "px");
+    }
+
+    $(window).on("resize scroll", adjustNavbarWidth);
+    adjustNavbarWidth();
   });
 </script>
 {% endblock %}

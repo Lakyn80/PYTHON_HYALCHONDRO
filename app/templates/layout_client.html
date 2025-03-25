@@ -26,13 +26,19 @@
             <li><a href="{{ url_for('client.index') }}">Hyalchondro</a></li>
             <li><a href="{{ url_for('client.cart') }}">🛒 Košík</a></li>
             <li><a href="{{ url_for('client.checkout') }}">💳 Pokladna</a></li>
-            <li><a href="{{ url_for('client.index') }}">📦 Produkty</a></li>
+            <li>
+              <a
+                class="nav-link"
+                href="{{ url_for('client.product_detail', product_id=1) }}"
+                >Produkty</a
+              >
+            </li>
 
             {% if session.customer_logged_in %}
             <li><span>👤 {{ session.customer_email }}</span></li>
             <li>
               <a href="{{ url_for('client.customer_orders') }}"
-                >📦 Moje objednávky</a
+                >Moje objednávky</a
               >
             </li>
             <li><a href="{{ url_for('client.profile') }}">👤 Profil</a></li>

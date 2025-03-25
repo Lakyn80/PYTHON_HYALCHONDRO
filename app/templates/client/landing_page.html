@@ -1,26 +1,39 @@
-{% extends "layout_client.html" %} {% block title %}Vítejte{% endblock %} {% set
-is_landing = True %} {% block extra_css %}
+{% extends "layout_client.html" %} {% block title %}Добро пожаловать{% endblock
+%} {% set is_landing = True %} {% block extra_css %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='client/css/landing.css') }}"
 />
 {% endblock %} {% block content %}
+
 <div class="login-links">
   {% if not session.customer_logged_in %}
-  <a href="{{ url_for('client.login_customer') }}">Přihlášení</a>
-  <a href="{{ url_for('client.register_customer') }}">Registrace</a>
-  {% else %} Přihlášen: {{ session.customer_email }} {% endif %}
+  <a href="{{ url_for('client.login_customer') }}">Вход</a>
+  <a href="{{ url_for('client.register_customer') }}">Регистрация</a>
+  {% else %} Вошли как: {{ session.customer_email }} {% endif %}
 </div>
 
-<div class="cta-top-right">
-  <h1>
-    "Комплексная <br />
-    поддержка <br />
-    суставов"
-  </h1>
-  <a href="{{ url_for('client.product_detail', product_id=1) }}" class="cta-btn"
-    >👉 Купить</a
-  >
-</div>
+<div class="landing">
+  <img
+    src="{{ url_for('static', filename='product-images/landing-bg.png') }}"
+    alt="Landing Image"
+    class="landing-image"
+  />
 
-{% endblock %}
+  <div class="cta-text-top-right">
+    <h1>
+      Сила. Поддержка. <br />
+      Движение.
+    </h1>
+  </div>
+    <div class="cta-button-bottom-right">
+      <a
+        href="{{ url_for('client.product_detail', product_id=1) }}"
+        class="cta-btn"
+        >Купить</a
+      >
+    </div>
+  </div>
+
+  {% endblock %}
+</div>

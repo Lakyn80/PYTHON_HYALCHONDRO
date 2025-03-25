@@ -1,24 +1,23 @@
-{% extends "layout_client.html" %} {% block title %}Košík{% endblock %} {% block
-extra_css %}
+{% extends "layout_client.html" %} {% block title %}Корзина{% endblock %} {%
+block extra_css %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='client/css/cart.css') }}"
 />
-
 {% endblock %} {% block content %}
 
 <div class="cart-wrapper">
-  <h1>🛒 Košík</h1>
+  <h1>🛒 Корзина</h1>
 
   {% if products %}
   <form method="POST" action="{{ url_for('client.update_cart') }}">
     <table class="cart-table">
       <thead>
         <tr>
-          <th>Produkt</th>
-          <th>Množství</th>
-          <th>Cena</th>
-          <th>Akce</th>
+          <th>Товар</th>
+          <th>Количество</th>
+          <th>Цена</th>
+          <th>Действие</th>
         </tr>
       </thead>
       <tbody>
@@ -38,7 +37,7 @@ extra_css %}
             <a
               href="{{ url_for('client.remove_from_cart', product_id=item.product.id) }}"
               class="btn btn-secondary btn-sm"
-              >Odebrat</a
+              >Удалить</a
             >
           </td>
         </tr>
@@ -47,19 +46,19 @@ extra_css %}
     </table>
 
     <div class="cart-actions">
-      <button type="submit" class="btn btn-primary">Aktualizovat košík</button>
-      <p class="cart-total">Celkem: {{ total_price }} RUB</p>
+      <button type="submit" class="btn btn-primary">Обновить корзину</button>
+      <p class="cart-total">Итого: {{ total_price }} RUB</p>
     </div>
   </form>
 
   <div class="cart-checkout text-end">
     <a href="{{ url_for('client.checkout') }}" class="btn btn-success">
-      ➡ Přejít k platbě
+      ➡ Перейти к оплате
     </a>
   </div>
 
   {% else %}
-  <div class="cart-empty">Košík je prázdný.</div>
+  <div class="cart-empty">Корзина пуста.</div>
   {% endif %}
 </div>
 

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, send_file
 from app.models import db, Product, Order, Customer
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.forms import CustomerLoginForm, CustomerRegisterForm, CheckoutForm, ProfileUpdateForm
@@ -6,13 +6,11 @@ from flask_mail import Message
 from .extensions import mail
 from app.tokens import generate_reset_token, verify_reset_token
 from app.email import send_reset_email
-from flask import send_file
 from app.utils.pdf_generator import generate_invoice_pdf
-
 
 client_bp = Blueprint('client', __name__)
 
-# LANDING PAGE
+# ГЛАВНАЯ СТРАНИЦА
 @client_bp.route('/')
 def index():
     products = Product.query.all()
@@ -22,24 +20,24 @@ def index():
 def redirect_to_product():
     return redirect(url_for('client.product_detail', product_id=1))
 
-# REGISTRACE ZAKAZNIKA
+# РЕГИСТРАЦИЯ
 @client_bp.route('/register', methods=['GET', 'POST'])
 def register_customer():
     form = CustomerRegisterForm()
     if form.validate_on_submit():
         existing_user = Customer.query.filter_by(email=form.email.data).first()
         if existing_user:
-            flash('Tento email již existuje.', 'error')
+            flash('Этот адрес электронной почты уже используется.', 'error')
             return redirect(url_for('client.register_customer'))
         hashed_password = generate_password_hash(form.password.data)
         new_customer = Customer(name=form.name.data, email=form.email.data, password=hashed_password)
         db.session.add(new_customer)
         db.session.commit()
-        flash('Registrace proběhla úspěšně. Můžete se přihlásit.', 'success')
+        flash('Регистрация прошла успешно. Теперь вы можете войти.', 'success')
         return redirect(url_for('client.login_customer'))
     return render_template('client/register.html', form=form)
 
-# LOGIN ZAKAZNIKA + RESET FORM V TEMPLATE
+# ВХОД
 @client_bp.route('/login', methods=['GET', 'POST'])
 def login_customer():
     form = CustomerLoginForm()
@@ -49,18 +47,18 @@ def login_customer():
             session['customer_logged_in'] = True
             session['customer_email'] = user.email
             session['customer_id'] = user.id
-            flash('Přihlášení úspěšné.', 'success')
+            flash('Вход выполнен успешно.', 'success')
             return redirect(url_for('client.index'))
         else:
-            flash('Neplatné přihlašovací údaje.', 'danger')
+            flash('Неверный логин или пароль.', 'danger')
     return render_template('client/login.html', form=form)
 
-# RESET PASSWORD REQUEST Z LOGIN TEMPLATE
+# ЗАПРОС НА СБРОС ПАРОЛЯ
 @client_bp.route("/reset_password-request", methods=["POST"])
 def reset_password_request():
     email = request.form.get("reset_email")
     if not email:
-        flash("Email je povinný", "error")
+        flash("Email обязателен.", "error")
         return redirect(url_for("client.login_customer"))
 
     user = Customer.query.filter_by(email=email).first()
@@ -68,17 +66,17 @@ def reset_password_request():
         token = generate_reset_token(user)
         reset_link = url_for('client.reset_password', token=token, _external=True)
         send_reset_email(user.email, reset_link)
-        flash("Odkaz pro obnovení hesla byl odeslán na váš email.", "success")
+        flash("Ссылка для сброса пароля отправлена на вашу почту.", "success")
     else:
-        flash("Uživatel s tímto emailem neexistuje.", "error")
+        flash("Пользователь с таким email не найден.", "error")
     return redirect(url_for("client.login_customer"))
 
-# RESET HESLA
+# СБРОС ПАРОЛЯ
 @client_bp.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     user = verify_reset_token(token)
     if not user:
-        flash('Neplatný nebo vypršený token.', 'error')
+        flash('Недействительный или истекший токен.', 'error')
         return redirect(url_for('client.login_customer'))
 
     if request.method == 'POST':
@@ -86,58 +84,57 @@ def reset_password(token):
         confirm = request.form.get('confirm_password')
 
         if not password or not confirm:
-            flash('Všechna pole jsou povinná.', 'error')
+            flash('Все поля обязательны.', 'error')
             return redirect(request.url)
 
         if password != confirm:
-            flash('Hesla se neshodují.', 'error')
+            flash('Пароли не совпадают.', 'error')
             return redirect(request.url)
 
         user.password = generate_password_hash(password)
         db.session.commit()
-        flash('Heslo bylo úspěšně změněno.', 'success')
+        flash('Пароль успешно изменён.', 'success')
         return redirect(url_for('client.login_customer'))
 
     return render_template('client/reset_password.html', token=token)
 
-
-# ODHLASENI
+# ВЫХОД
 @client_bp.route('/logout')
 def logout_customer():
     session.clear()
-    flash('Odhlášení úspěšné.', 'success')
+    flash('Вы вышли из аккаунта.', 'success')
     return redirect(url_for('client.index'))
 
-# OBJEDNAVKY
+# ЗАКАЗЫ
 @client_bp.route('/account/orders')
 def customer_orders():
     if not session.get('customer_logged_in') or 'customer_id' not in session:
-        flash('Pro zobrazení objednávek se musíte přihlásit.', 'warning')
+        flash('Пожалуйста, войдите в аккаунт, чтобы увидеть заказы.', 'warning')
         return redirect(url_for('client.login_customer'))
     orders = Order.query.filter_by(customer_id=session['customer_id']).order_by(Order.created_at.desc()).all()
     return render_template('client/customer_orders.html', orders=orders)
 
-# DETAIL PRODUKTU
+# ПОДРОБНОСТИ О ПРОДУКТЕ
 @client_bp.route('/product/<int:product_id>')
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
     return render_template('client/product.html', product=product)
 
-# PRIDANI DO KOSIKU
+# ДОБАВИТЬ В КОРЗИНУ
 @client_bp.route('/add-to-cart/<int:product_id>', methods=['POST'])
 def add_to_cart(product_id):
     if not session.get('customer_logged_in'):
-        flash('Pro přidání do košíku se musíte přihlásit.', 'warning')
+        flash('Пожалуйста, войдите в аккаунт, чтобы добавить товар.', 'warning')
         return redirect(url_for('client.login_customer'))
 
     quantity = int(request.form.get('quantity', 1))
     cart = session.get('cart', {})
     cart[str(product_id)] = cart.get(str(product_id), 0) + quantity
     session['cart'] = cart
-    flash('Produkt byl přidán do košíku.', 'success')
+    flash('Товар добавлен в корзину.', 'success')
     return redirect(url_for('client.cart'))
 
-# ZOBRAZENI KOSIKU
+# КОРЗИНА
 @client_bp.route('/cart')
 def cart():
     cart = session.get('cart', {})
@@ -151,7 +148,7 @@ def cart():
             total += subtotal
     return render_template('client/cart.html', products=items, total_price=total)
 
-# UPDATE KOSIKU
+# ОБНОВИТЬ КОРЗИНУ
 @client_bp.route('/update-cart', methods=['POST'])
 def update_cart():
     cart = session.get('cart', {})
@@ -160,28 +157,28 @@ def update_cart():
             pid = key.split("_")[1]
             cart[pid] = max(1, int(value))
     session['cart'] = cart
-    flash('Košík byl aktualizován.', 'success')
+    flash('Корзина обновлена.', 'success')
     return redirect(url_for('client.cart'))
 
-# ODEBRANI Z KOSIKU
+# УДАЛИТЬ ИЗ КОРЗИНЫ
 @client_bp.route('/remove-from-cart/<int:product_id>')
 def remove_from_cart(product_id):
     cart = session.get('cart', {})
     cart.pop(str(product_id), None)
     session['cart'] = cart
-    flash('Produkt byl odebrán z košíku.', 'success')
+    flash('Товар удалён из корзины.', 'success')
     return redirect(url_for('client.cart'))
 
-# CHECKOUT
+# ОФОРМЛЕНИЕ ЗАКАЗА
 @client_bp.route('/checkout', methods=['GET', 'POST'])
 def checkout():
     if not session.get('customer_logged_in'):
-        flash('Pro pokračování k pokladně se musíte přihlásit.', 'warning')
+        flash('Войдите в аккаунт, чтобы оформить заказ.', 'warning')
         return redirect(url_for('client.login_customer'))
 
     cart = session.get('cart', {})
     if not cart:
-        flash('Košík je prázdný.', 'error')
+        flash('Ваша корзина пуста.', 'error')
         return redirect(url_for('client.cart'))
 
     form = CheckoutForm()
@@ -203,53 +200,42 @@ def checkout():
 
         db.session.commit()
 
-        # ✅ PDF faktura
         invoice_pdf = generate_invoice_pdf(orders[0])
-
-        # ✅ Odeslání e-mailem
-        send_order_email(
-            email=form.email.data,
-            name=form.name.data,
-            invoice_pdf=invoice_pdf
-        )
+        send_order_email(form.email.data, form.name.data, invoice_pdf)
 
         session.pop('cart', None)
-        flash('Objednávka úspěšně dokončena.', 'success')
+        flash('Заказ успешно оформлен.', 'success')
         return redirect(url_for('client.order_success'))
 
     return render_template('client/checkout.html', form=form)
 
-
-
-# OBJEDNAVKA DOKONCENA
+# УСПЕШНЫЙ ЗАКАЗ
 @client_bp.route('/order-success')
 def order_success():
     return render_template('client/order_success.html')
 
-# EMAIL POTVRZENI OBJEDNAVKY
-
+# ОТПРАВКА ПИСЬМА С ПОДТВЕРЖДЕНИЕМ
 def send_order_email(email, name, invoice_pdf):
-    msg = Message("Potvrzení objednávky", recipients=[email])
-    msg.body = f"Dobrý den {name},\n\nDěkujeme za Vaši objednávku."
+    msg = Message("Подтверждение заказа", recipients=[email])
+    msg.body = f"Здравствуйте, {name}!\n\nСпасибо за ваш заказ."
 
     msg.attach(
-        filename="faktura.pdf",
+        filename="счёт-фактура.pdf",
         content_type="application/pdf",
         data=invoice_pdf.getvalue()
     )
 
     try:
         mail.send(msg)
-        print("✅ Email s fakturou odeslán")
+        print("✅ Письмо с счётом отправлено")
     except Exception as e:
-        print(f"❌ Email chyba: {e}")
+        print(f"❌ Ошибка при отправке письма: {e}")
 
-
-# PROFIL ZÁKAZNÍKA
+# ПРОФИЛЬ КЛИЕНТА
 @client_bp.route('/account/profile', methods=['GET', 'POST'])
 def profile():
     if not session.get('customer_logged_in'):
-        flash("Musíte se přihlásit pro zobrazení profilu.", "warning")
+        flash("Пожалуйста, войдите в аккаунт для доступа к профилю.", "warning")
         return redirect(url_for('client.login_customer'))
 
     customer = Customer.query.get(session['customer_id'])
@@ -262,7 +248,7 @@ def profile():
         customer.phone = form.phone.data
 
         db.session.commit()
-        flash("Profil byl aktualizován.", "success")
+        flash("Профиль обновлён.", "success")
         return redirect(url_for('client.profile'))
 
     return render_template('client/profile.html', customer=customer, form=form)

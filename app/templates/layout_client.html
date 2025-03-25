@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,34 +24,34 @@
           <button class="navbar-toggle" id="navbarToggle">☰</button>
           <ul class="navbar-links" id="navbarLinks">
             <li><a href="{{ url_for('client.index') }}">Hyalchondro</a></li>
-            <li><a href="{{ url_for('client.cart') }}">🛒 Košík</a></li>
-            <li><a href="{{ url_for('client.checkout') }}">💳 Pokladna</a></li>
+            <li><a href="{{ url_for('client.cart') }}">🛒 Корзина</a></li>
+            <li>
+              <a href="{{ url_for('client.checkout') }}">💳 Оформление</a>
+            </li>
             <li>
               <a
                 class="nav-link"
                 href="{{ url_for('client.product_detail', product_id=1) }}"
-                >Produkty</a
+                >Товары</a
               >
             </li>
 
             {% if session.customer_logged_in %}
             <li><span>👤 {{ session.customer_email }}</span></li>
             <li>
-              <a href="{{ url_for('client.customer_orders') }}"
-                >Moje objednávky</a
-              >
+              <a href="{{ url_for('client.customer_orders') }}">Мои заказы</a>
             </li>
-            <li><a href="{{ url_for('client.profile') }}">👤 Profil</a></li>
+            <li><a href="{{ url_for('client.profile') }}">👤 Профиль</a></li>
             <li>
-              <a href="{{ url_for('client.logout_customer') }}">Odhlásit</a>
+              <a href="{{ url_for('client.logout_customer') }}">Выйти</a>
             </li>
             {% else %}
             <li>
-              <a href="{{ url_for('client.login_customer') }}">Přihlásit</a>
+              <a href="{{ url_for('client.login_customer') }}">Войти</a>
             </li>
             <li>
               <a href="{{ url_for('client.register_customer') }}"
-                >📝 Registrovat</a
+                >Зарегистрироваться</a
               >
             </li>
             {% endif %}
@@ -59,6 +59,7 @@
         </div>
       </div>
     </nav>
+
     {% endif %} {% if not is_landing %} {% with messages =
     get_flashed_messages(with_categories=true) %} {% if messages %} {% for
     category, message in messages %}

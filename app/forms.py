@@ -9,66 +9,63 @@ from wtforms.validators import (
 
 
 class AdminLoginForm(FlaskForm):
-    email = EmailField("Email", validators=[DataRequired(), Email()])
-    password = PasswordField("Heslo", validators=[DataRequired()])
-    submit = SubmitField("Přihlásit")
+    email = EmailField("Электронная почта", validators=[DataRequired(), Email()])
+    password = PasswordField("Пароль", validators=[DataRequired()])
+    submit = SubmitField("Войти")
 
 
 class AdminRegisterForm(FlaskForm):
-    email = EmailField("Email", validators=[DataRequired(), Email()])
-    password = PasswordField("Heslo", validators=[DataRequired(), Length(min=6)])
+    email = EmailField("Электронная почта", validators=[DataRequired(), Email()])
+    password = PasswordField("Пароль", validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField(
-        "Potvrzení hesla",
+        "Подтвердите пароль",
         validators=[DataRequired(), EqualTo('password')]
     )
-    submit = SubmitField("Registrovat")
+    submit = SubmitField("Зарегистрироваться")
 
 
 class ProductForm(FlaskForm):
-    name = StringField("Název produktu", validators=[DataRequired()])
-    description = TextAreaField("Popis", validators=[DataRequired()])
-    price = FloatField("Cena", validators=[DataRequired(), NumberRange(min=0)])
-    stock = IntegerField("Počet kusů", validators=[DataRequired(), NumberRange(min=0)])
-    image = FileField("Obrázek", validators=[Optional()])
-    submit = SubmitField("Uložit")
+    name = StringField("Название продукта", validators=[DataRequired()])
+    description = TextAreaField("Описание", validators=[DataRequired()])
+    price = FloatField("Цена", validators=[DataRequired(), NumberRange(min=0)])
+    stock = IntegerField("Количество", validators=[DataRequired(), NumberRange(min=0)])
+    image = FileField("Изображение", validators=[Optional()])
+    submit = SubmitField("Сохранить")
 
 
 class CustomerRegisterForm(FlaskForm):
-    name = StringField("Jméno", validators=[DataRequired()])
-    email = EmailField("Email", validators=[DataRequired(), Email()])
-    password = PasswordField("Heslo", validators=[DataRequired(), Length(min=6)])
+    name = StringField("Имя", validators=[DataRequired()])
+    email = EmailField("Электронная почта", validators=[DataRequired(), Email()])
+    password = PasswordField("Пароль", validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField(
-        "Potvrzení hesla",
+        "Подтвердите пароль",
         validators=[DataRequired(), EqualTo('password')]
     )
-    submit = SubmitField("Registrovat")
+    submit = SubmitField("Зарегистрироваться")
 
 
 class CustomerLoginForm(FlaskForm):
-    email = EmailField("Email", validators=[DataRequired(), Email()])
-    password = PasswordField("Heslo", validators=[DataRequired()])
-    submit = SubmitField("Přihlásit")
+    email = EmailField("Электронная почта", validators=[DataRequired(), Email()])
+    password = PasswordField("Пароль", validators=[DataRequired()])
+    submit = SubmitField("Войти")
 
 
 class CheckoutForm(FlaskForm):
-    name = StringField("Jméno a příjmení", validators=[DataRequired()])
-    email = EmailField("Email", validators=[DataRequired(), Email()])
-    address = TextAreaField("Adresa", validators=[DataRequired()])
+    name = StringField("Имя и фамилия", validators=[DataRequired()])
+    email = EmailField("Электронная почта", validators=[DataRequired(), Email()])
+    address = TextAreaField("Адрес доставки", validators=[DataRequired()])
     payment_method = SelectField(
-        "Způsob platby",
-        choices=[("card", "Karta"), ("cash", "Dobírka")],
+        "Способ оплаты",
+        choices=[("card", "Картой"), ("cash", "Наложенный платеж")],
         validators=[DataRequired()]
     )
-    submit = SubmitField("Zaplatit")
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import Optional
+    submit = SubmitField("Оплатить")
+
 
 class ProfileUpdateForm(FlaskForm):
-    name = StringField('Jméno')
-    surname = StringField('Příjmení')
-    email = StringField('Email')
-    address = StringField('Adresa')
-    phone = StringField('Telefon')
-    submit = SubmitField('Uložit změny')
-
+    name = StringField('Имя')
+    surname = StringField('Фамилия')
+    email = StringField('Электронная почта')
+    address = StringField('Адрес')
+    phone = StringField('Телефон')
+    submit = SubmitField('Сохранить изменения')

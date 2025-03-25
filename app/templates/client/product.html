@@ -13,27 +13,25 @@ endblock %} {% block extra_css %}
 
     const toggleBtn = document.getElementById("darkModeToggle");
     if (toggleBtn) {
-      toggleBtn.textContent = "☀️ Light Mode";
+      toggleBtn.textContent = "☀️ Светлый режим";
       toggleBtn.addEventListener("click", function () {
         document.body.classList.toggle("dark-mode");
         toggleBtn.textContent = document.body.classList.contains("dark-mode")
-          ? "☀️ Light Mode"
-          : "🌙 Dark Mode";
+          ? "☀️ Светлый режим"
+          : "🌙 Тёмный режим";
       });
     }
   });
 </script>
 
-<!-- 💡 Toggle Button UI -->
 <div class="dark-mode-toggle text-end mb-4">
   <button id="darkModeToggle" class="btn btn-outline-dark btn-sm">
-    🌙 Dark Mode
+    🌙 Тёмный режим
   </button>
 </div>
 
 <div class="product-detail-wrapper container">
   <div class="product-detail-grid">
-    <!-- Obrázek vlevo -->
     <div class="product-image">
       {% if product.image_filename %}
       <img
@@ -43,7 +41,6 @@ endblock %} {% block extra_css %}
       {% endif %}
     </div>
 
-    <!-- Popis vpravo -->
     <div class="product-description">
       <h1>{{ product.name }}</h1>
       <div class="description-content">{{ product.description | safe }}</div>
@@ -54,10 +51,10 @@ endblock %} {% block extra_css %}
         method="POST"
         class="product-form"
       >
-        <label for="quantity">Množství:</label>
+        <label for="quantity">Количество:</label>
         <input type="number" name="quantity" value="1" min="1" />
         <button type="submit" class="btn btn-primary">
-          🛒 Přidat do košíku
+          🛒 Добавить в корзину
         </button>
       </form>
     </div>

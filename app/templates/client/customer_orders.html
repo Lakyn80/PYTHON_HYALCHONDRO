@@ -1,19 +1,20 @@
-{% extends "layout_client.html" %} {% block title %}Moje objednávky{% endblock
-%} {% block content %}
+{% extends "layout_client.html" %}
+{% block title %}Мои заказы{% endblock %}
+{% block content %}
 <div class="orders-container">
-  <h2>📦 Moje objednávky</h2>
+  <h2>📦 Мои заказы</h2>
   {% if orders %}
   <ul class="orders-list">
     {% for order in orders %}
     <li>
-      <strong>Produkt:</strong> {{ order.product.name }}<br />
-      <strong>Množství:</strong> {{ order.quantity }}<br />
-      <strong>Datum:</strong> {{ order.created_at.strftime('%d.%m.%Y %H:%M') }}
+      <strong>Товар:</strong> {{ order.product.name }}<br />
+      <strong>Количество:</strong> {{ order.quantity }}<br />
+      <strong>Дата:</strong> {{ order.created_at.strftime('%d.%m.%Y %H:%M') }}
     </li>
     {% endfor %}
   </ul>
   {% else %}
-  <p>Nemáte žádné objednávky.</p>
+  <p>У вас нет заказов.</p>
   {% endif %}
 </div>
 {% endblock %}

@@ -1,11 +1,11 @@
-{% extends "layout_client.html" %} {% block title %}Registrace zákazníka{%
+{% extends "layout_client.html" %} {% block title %}Регистрация клиента{%
 endblock %} {% block content %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='client/css/register.css') }}"
 />
 <div class="register-container">
-  <h2>Registrace zákazníka</h2>
+  <h2>Регистрация клиента</h2>
   <form method="POST" class="register-form">
     {{ form.hidden_tag() }}
 
@@ -33,8 +33,8 @@ endblock %} {% block content %}
   </form>
 
   <p class="login-link">
-    Máte už účet?
-    <a href="{{ url_for('client.login_customer') }}">Přihlaste se</a>
+    Уже есть аккаунт?
+    <a href="{{ url_for('client.login_customer') }}">Войти</a>
   </p>
 </div>
 {% endblock %}

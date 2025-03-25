@@ -1,5 +1,5 @@
-{% extends "layout_client.html" %} {% block title %}Pokladna{% endblock %} {%
-block extra_css %}
+{% extends "layout_client.html" %} {% block title %}Оформление заказа{% endblock
+%} {% block extra_css %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='client/css/checkout.css') }}"
@@ -7,7 +7,7 @@ block extra_css %}
 {% endblock %} {% block content %}
 <div class="checkout-page">
   <div class="checkout-container">
-    <h1>Pokladna</h1>
+    <h1>Оформление заказа</h1>
     <form method="POST">
       {{ form.hidden_tag() }}
 

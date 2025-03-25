@@ -1,20 +1,40 @@
 {% extends "layout_client.html" %} {% block title %}Registrace zákazníka{%
 endblock %} {% block content %}
-<h2>Registrace zákazníka</h2>
-<form method="POST">
-  {{ form.hidden_tag() }} {{ form.name.label }}<br />
-  {{ form.name(size=32) }}<br /><br />
-  {{ form.email.label }}<br />
-  {{ form.email(size=32) }}<br /><br />
-  {{ form.password.label }}<br />
-  {{ form.password(size=32) }}<br /><br />
-  {{ form.confirm_password.label }}<br />
-  {{ form.confirm_password(size=32) }}<br /><br />
-  {{ form.submit() }}
-</form>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='client/css/register.css') }}"
+/>
+<div class="register-container">
+  <h2>Registrace zákazníka</h2>
+  <form method="POST" class="register-form">
+    {{ form.hidden_tag() }}
 
-<p>
-  Máte už účet?
-  <a href="{{ url_for('client.login_customer') }}">Přihlaste se</a>
-</p>
+    <div class="form-group">
+      {{ form.name.label(class="form-label") }} {{ form.name(class="form-input")
+      }}
+    </div>
+
+    <div class="form-group">
+      {{ form.email.label(class="form-label") }} {{
+      form.email(class="form-input") }}
+    </div>
+
+    <div class="form-group">
+      {{ form.password.label(class="form-label") }} {{
+      form.password(class="form-input") }}
+    </div>
+
+    <div class="form-group">
+      {{ form.confirm_password.label(class="form-label") }} {{
+      form.confirm_password(class="form-input") }}
+    </div>
+
+    <div class="form-group">{{ form.submit(class="register-button") }}</div>
+  </form>
+
+  <p class="login-link">
+    Máte už účet?
+    <a href="{{ url_for('client.login_customer') }}">Přihlaste se</a>
+  </p>
+</div>
 {% endblock %}

@@ -47,7 +47,7 @@ body {
   margin-top: -45px; /* 💥 Posun o cca 1 cm nahoru */
 }
 .product-image:hover {
-  transform: scale(1.22);
+  transform: scale(1.12);
 }
 .product-image img {
   width: 100%;
@@ -151,6 +151,34 @@ body.dark-mode .dark-mode-toggle .btn {
   color: #f1f1f1;
   border-color: #aaa;
 }
+/* 🌙 Dark Mode Support */
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode .product-detail-wrapper {
+  background-color: #1e1e1e;
+}
+
+body.dark-mode .product-description h1,
+body.dark-mode .description-content,
+body.dark-mode .product-price {
+  color: #f5f5f5;
+}
+
+body.dark-mode .btn {
+  background-color: #2196f3;
+}
+body.dark-mode .btn:hover {
+  background-color: #0d47a1;
+}
+
+body.dark-mode input[type="number"] {
+  background-color: #2a2a2a;
+  border-color: #555;
+  color: #e0e0e0;
+}
 
 /* 📱 Responsive Breakpoints */
 @media (max-width: 1024px) {
@@ -192,35 +220,6 @@ body.dark-mode .dark-mode-toggle .btn {
   .product-form input[type="number"] {
     width: 100%;
   }
-}
-
-/* 🌙 Dark Mode Support */
-body.dark-mode {
-  background-color: #121212;
-  color: #e0e0e0;
-}
-
-body.dark-mode .product-detail-wrapper {
-  background-color: #1e1e1e;
-}
-
-body.dark-mode .product-description h1,
-body.dark-mode .description-content,
-body.dark-mode .product-price {
-  color: #f5f5f5;
-}
-
-body.dark-mode .btn {
-  background-color: #2196f3;
-}
-body.dark-mode .btn:hover {
-  background-color: #0d47a1;
-}
-
-body.dark-mode input[type="number"] {
-  background-color: #2a2a2a;
-  border-color: #555;
-  color: #e0e0e0;
 }
 
 /* 💡 Add dark mode toggle with JS if needed */

@@ -11,11 +11,92 @@
       rel="stylesheet"
     />
 
-    <!-- Vlastní CSS -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/layout_admin.css') }}"
-    />
+    <style>
+      html,
+      body {
+        height: 100%;
+        min-width: 100%;
+        overflow-x: scroll; /* scroll bar vždy viditelný a dole */
+        margin: 0;
+        padding: 0;
+        font-family: "Arial", sans-serif;
+      }
+
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1050;
+        width: 100%;
+      }
+
+      .page-content {
+        padding-top: 56px; /* výška navbaru */
+        min-width: fit-content; /* zajistí roztažení podle šířky obsahu */
+      }
+
+      .table-container {
+        margin-bottom: 20px;
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1000px;
+        background-color: #fff;
+      }
+
+      .table th,
+      .table td {
+        vertical-align: middle;
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 15px;
+      }
+
+      .table th {
+        background-color: #f8f8f8;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .table td {
+        color: #444;
+      }
+
+      .table td img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+        display: block;
+      }
+
+      .table tr:hover {
+        background-color: #f4f4f4;
+      }
+
+      @media (max-width: 768px) {
+        .table th,
+        .table td {
+          font-size: 14px;
+          padding: 10px 12px;
+        }
+
+        .table {
+          min-width: unset;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .table th,
+        .table td {
+          font-size: 13px;
+          padding: 8px 10px;
+        }
+      }
+    </style>
 
     {% block head %}{% endblock %}
   </head>
@@ -71,7 +152,7 @@
     </nav>
 
     <!-- OBSAH STRÁNKY -->
-    <div class="container mt-4">
+    <div class="page-content container mt-4">
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %} {% for category, message in messages %}
       <div
@@ -89,10 +170,7 @@
       {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
     </div>
 
-    <!-- FOOTER -->
-    <footer class="text-center py-4 text-muted">
-      <small>&copy; {{ current_year or 2025 }} Admin Panel</small>
-    </footer>
+  
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

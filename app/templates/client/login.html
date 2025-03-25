@@ -1,16 +1,73 @@
 {% extends "layout_client.html" %} {% block title %}Přihlášení zákazníka{%
 endblock %} {% block content %}
-<h2>Přihlášení zákazníka</h2>
-<form method="POST">
-  {{ form.hidden_tag() }} {{ form.email.label }}<br />
-  {{ form.email(size=32) }}<br /><br />
-  {{ form.password.label }}<br />
-  {{ form.password(size=32) }}<br /><br />
-  {{ form.submit() }}
-</form>
+<div class="login-container">
+  <h2>Přihlášení zákazníka</h2>
+  <form method="POST" class="login-form">
+    {{ form.hidden_tag() }}
 
-<p>
-  Nemáte ještě účet?
-  <a href="{{ url_for('client.register_customer') }}">Zaregistrujte se</a>
-</p>
+    <div class="form-group">
+      {{ form.email.label(class="form-label") }} {{
+      form.email(class="form-input") }}
+    </div>
+
+    <div class="form-group">
+      {{ form.password.label(class="form-label") }} {{
+      form.password(class="form-input") }}
+    </div>
+
+    <div class="form-group">{{ form.submit(class="login-button") }}</div>
+
+    <p class="forgot-link">
+      <a href="#" id="toggleReset">Zapomněli jste heslo?</a>
+    </p>
+  </form>
+
+  <!-- 💌 Reset hesla -->
+  <form
+    method="POST"
+    action="{{ url_for('client.reset_password_request') }}"
+    class="reset-form"
+    id="resetForm"
+    style="display: none"
+  >
+    <div class="form-group">
+      <label for="reset_email" class="form-label">Zadejte váš email</label>
+      <input
+        type="email"
+        id="reset_email"
+        name="reset_email"
+        class="form-input"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <button type="submit" class="login-button">
+        Odeslat odkaz pro obnovení hesla
+      </button>
+    </div>
+  </form>
+
+  <p class="register-link">
+    Nemáte ještě účet?
+    <a href="{{ url_for('client.register_customer') }}">Zaregistrujte se</a>
+  </p>
+</div>
+{% endblock %} {% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='client/css/login.css') }}"
+/>
+{% endblock %} {% block content_scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleLink = document.getElementById("toggleReset");
+    const resetForm = document.getElementById("resetForm");
+
+    toggleLink.addEventListener("click", function (e) {
+      e.preventDefault();
+      resetForm.style.display =
+        resetForm.style.display === "none" ? "block" : "none";
+    });
+  });
+</script>
 {% endblock %}

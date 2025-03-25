@@ -1,9 +1,5 @@
 {% extends "layout_admin.html" %} {% block title %}Objednávky{% endblock %} {%
 block content %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/orders_table.css') }}"
-/>
 
 <h2 class="text-center mb-4">📋 Objednávky zákazníků</h2>
 
@@ -14,18 +10,34 @@ block content %}
 />
 <link
   rel="stylesheet"
-  href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css"
+  href="{{ url_for('static', filename='admin/css/orders_table.css') }}"
 />
 
-<!-- jQuery + DataTables JS -->
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<!-- Export tlačítka -->
+<div class="d-flex gap-2 mb-3">
+  <form
+    method="POST"
+    action="{{ url_for('admin.export_orders_route', format='excel') }}"
+  >
+    <button type="submit" class="btn btn-success btn-sm">
+      ⬇️ Export Excel
+    </button>
+  </form>
+  <form
+    method="POST"
+    action="{{ url_for('admin.export_orders_route', format='csv') }}"
+  >
+    <button type="submit" class="btn btn-secondary btn-sm">
+      ⬇️ Export CSV
+    </button>
+  </form>
+  <form
+    method="POST"
+    action="{{ url_for('admin.export_orders_route', format='pdf') }}"
+  >
+    <button type="submit" class="btn btn-danger btn-sm">⬇️ Export PDF</button>
+  </form>
+</div>
 
 <div class="orders-wrapper">
   <table
@@ -44,21 +56,9 @@ block content %}
         <th>Množství</th>
         <th>Datum</th>
         <th>Stav</th>
+        <th>🗑️</th>
       </tr>
     </thead>
-    <tfoot>
-      <tr>
-        <th>Faktura</th>
-        <th>Objednávka</th>
-        <th>Jméno</th>
-        <th>Email</th>
-        <th>Adresa</th>
-        <th>Produkt</th>
-        <th>Množství</th>
-        <th>Datum</th>
-        <th>Stav</th>
-      </tr>
-    </tfoot>
     <tbody>
       {% for order in orders %}
       <tr>
@@ -71,9 +71,26 @@ block content %}
         <td>{{ order.quantity }}</td>
         <td>{{ order.created_at.strftime('%d.%m.%Y') }}</td>
         <td>
-          <span class="badge badge-{{ order.status | lower }}">
-            {{ order.status or "neuvedeno" }}
-          </span>
+          <div
+            class="custom-status-dropdown status-{{ order.status.lower().replace(' ', '-') }}"
+            data-order-id="{{ order.id }}"
+          >
+            <span class="current-status">{{ order.status }}</span>
+            <ul class="status-options">
+              {% for status_option in ['Nová', 'Zpracovává se', 'Odesláno',
+              'Zrušeno'] %}
+              <li data-value="{{ status_option }}">{{ status_option }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-sm delete-order-btn"
+          >
+            🗑️
+          </button>
         </td>
       </tr>
       {% endfor %}
@@ -81,32 +98,86 @@ block content %}
   </table>
 </div>
 
+<!-- JS knihovny -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 <script>
   $(document).ready(function () {
-    $("#orders-table tfoot th").each(function () {
-      const title = $(this).text();
-      $(this).html('<input type="text" placeholder="Filtr ' + title + '" />');
+    $("#orders-table").DataTable({
+      responsive: true,
+      language: { url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/cs.json" },
     });
 
-    const table = $("#orders-table").DataTable({
-      dom: "Bfrtip",
-      buttons: ["copy", "csv", "excel", "pdf", "print"],
-      responsive: true,
-      language: {
-        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/cs.json",
-      },
-      initComplete: function () {
-        this.api()
-          .columns()
-          .every(function () {
-            const that = this;
-            $("input", this.footer()).on("keyup change", function () {
-              if (that.search() !== this.value) {
-                that.search(this.value).draw();
-              }
-            });
-          });
-      },
+    // Dropdown – změna stavu
+    $(".custom-status-dropdown").on("click", function (e) {
+      e.stopPropagation();
+      $(".status-options").not($(this).find(".status-options")).hide();
+      $(this).find(".status-options").toggle();
+    });
+
+    $(document).on("click", function () {
+      $(".status-options").hide();
+    });
+
+    $(".status-options li").on("click", function (e) {
+      e.stopPropagation();
+      const newStatus = $(this).data("value");
+      const dropdown = $(this).closest(".custom-status-dropdown");
+      const orderId = dropdown.data("order-id");
+
+      dropdown.find(".current-status").text(newStatus);
+      dropdown.removeClass(
+        "status-nova status-zpracovava-se status-odeslano status-zruseno"
+      );
+      dropdown.addClass(
+        "status-" + newStatus.toLowerCase().replace(/\s+/g, "-")
+      );
+      dropdown.find(".status-options").hide();
+
+      $.ajax({
+        url: "/admin/api/update-order-status",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ order_id: orderId, status: newStatus }),
+        success: function (res) {
+          console.log("✅ " + res.message);
+        },
+        error: function () {
+          alert("❌ Chyba při změně stavu");
+        },
+      });
+    });
+
+    // Inicializace barev
+    $(".custom-status-dropdown").each(function () {
+      const currentText = $(this)
+        .find(".current-status")
+        .text()
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+      $(this).addClass("status-" + currentText);
+    });
+
+    // 🗑️ Soft delete
+    $(".delete-order-btn").on("click", function () {
+      const row = $(this).closest("tr");
+      const orderId = row.find(".custom-status-dropdown").data("order-id");
+
+      $.ajax({
+        url: "/admin/api/hide-order",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ order_id: orderId }),
+        success: function (res) {
+          if (res.success) {
+            row.remove();
+          }
+        },
+        error: function () {
+          alert("❌ Chyba při mazání objednávky.");
+        },
+      });
     });
   });
 </script>

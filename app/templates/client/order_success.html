@@ -1,11 +1,14 @@
-<!-- templates/client/order_success.html -->
-{% extends "layout_client.html" %} {% block title %}Objednávka úspěšná{%
-endblock %} {% block content %}
+{% extends "layout_client.html" %}
+{% block title %}Objednávka úspěšná{% endblock %}
 
-<h2>Děkujeme za Vaši objednávku!</h2>
-<p>Potvrzení bylo odesláno na Váš e-mail.</p>
-<a href="{{ url_for('client.index') }}">Zpět na hlavní stránku</a>
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='client/css/order_success.css') }}">
+{% endblock %}
 
-
-
+{% block content %}
+<div class="order-success-container">
+  <h2>🎉 Děkujeme za Vaši objednávku!</h2>
+  <p>Potvrzení bylo odesláno na Váš e-mail.</p>
+  <a href="{{ url_for('client.index') }}" class="btn-back-home">⬅ Zpět na hlavní stránku</a>
+</div>
 {% endblock %}

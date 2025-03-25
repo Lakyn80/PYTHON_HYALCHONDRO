@@ -1,35 +1,42 @@
 {% extends "layout_client.html" %} {% block title %}Můj profil{% endblock %} {%
-block content %}
-
+block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='client/css/profile.css') }}"
+/>
+{% endblock %} {% block content %}
 <div class="profile-container">
   <h2>👤 Můj profil</h2>
 
   <form method="POST">
     {{ form.hidden_tag() }}
 
-    <div>
-      <label>{{ form.name.label }}</label><br />
-      {{ form.name(size=40) }}
-    </div>
-    <div>
-      <label>{{ form.surname.label }}</label><br />
-      {{ form.surname(size=40) }}
-    </div>
-    <div>
-      <label>{{ form.email.label }}</label><br />
-      {{ form.email(size=40) }}
-    </div>
-    <div>
-      <label>{{ form.address.label }}</label><br />
-      {{ form.address(size=40) }}
-    </div>
-    <div>
-      <label>{{ form.phone.label }}</label><br />
-      {{ form.phone(size=40) }}
+    <div class="form-group">
+      <label>{{ form.name.label }}</label>
+      {{ form.name(class="form-control") }}
     </div>
 
-    <div style="margin-top: 15px">{{ form.submit(class="btn") }}</div>
+    <div class="form-group">
+      <label>{{ form.surname.label }}</label>
+      {{ form.surname(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+      <label>{{ form.email.label }}</label>
+      {{ form.email(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+      <label>{{ form.address.label }}</label>
+      {{ form.address(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+      <label>{{ form.phone.label }}</label>
+      {{ form.phone(class="form-control") }}
+    </div>
+
+    <div class="form-actions">{{ form.submit(class="btn btn-primary") }}</div>
   </form>
 </div>
-
 {% endblock %}

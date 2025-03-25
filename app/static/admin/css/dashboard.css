@@ -1,7 +1,6 @@
-
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f4f6f9;
   color: #333;
 }
@@ -12,7 +11,7 @@ body {
   padding: 20px;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-container h2 {
@@ -26,19 +25,20 @@ body {
   gap: 20px;
   justify-content: center;
   margin-bottom: 40px;
+  flex-wrap: wrap;
 }
 
 .action-card {
-  flex: 1;
-  min-width: 220px;
+  flex: 1 1 220px;
   background-color: #007bff;
   color: #fff;
   text-decoration: none;
   padding: 25px 20px;
   border-radius: 10px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   transition: background 0.3s ease;
   text-align: center;
+  min-width: 220px;
 }
 
 .action-card:hover {
@@ -59,6 +59,7 @@ body {
   width: 100%;
   border-collapse: collapse;
   background-color: #fff;
+  overflow-x: auto;
 }
 
 .product-table th,
@@ -89,63 +90,140 @@ body {
 }
 
 .orders-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    font-family: Arial, sans-serif;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
+  overflow-x: auto;
 }
 
-.orders-table th, .orders-table td {
-    border: 1px solid #ccc;
-    padding: 8px 12px;
-    text-align: center;
+.orders-table th,
+.orders-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: center;
 }
 
 .orders-table th {
-    background-color: #f4f4f4;
+  background-color: #f4f4f4;
 }
 
 .orders-table tr:nth-child(even) {
-    background-color: #fafafa;
+  background-color: #fafafa;
 }
 
 .orders-table tr:hover {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 .export-buttons {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
 }
 
 .export-buttons form {
-    display: inline-block;
-    margin-right: 10px;
+  display: inline-block;
+  margin-right: 10px;
 }
 
 .btn {
-    background-color: #1976d2;
-    color: white;
-    padding: 8px 16px;
-    text-decoration: none;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+  background-color: #1976d2;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .btn:hover {
-    background-color: #1565c0;
+  background-color: #1565c0;
 }
 
 .small-btn {
-    padding: 5px 10px;
-    font-size: 13px;
+  padding: 5px 10px;
+  font-size: 13px;
 }
 
 .orders-table select {
-    padding: 5px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
 
+/* 🔥 Responsive Breakpoints */
+@media (max-width: 992px) {
+  .dashboard-container {
+    margin: 20px;
+  }
 
+  .dashboard-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .action-card {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container h2 {
+    font-size: 24px;
+  }
+
+  .action-card h3 {
+    font-size: 18px;
+  }
+
+  .product-table th,
+  .product-table td,
+  .orders-table th,
+  .orders-table td {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .btn,
+  .small-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .export-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 15px;
+  }
+
+  .dashboard-container h2 {
+    font-size: 20px;
+  }
+
+  .action-card {
+    padding: 20px 15px;
+  }
+
+  .action-card h3 {
+    font-size: 16px;
+  }
+
+  .product-table,
+  .orders-table {
+    font-size: 12px;
+  }
+
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+}

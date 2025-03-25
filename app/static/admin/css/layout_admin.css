@@ -1,10 +1,90 @@
-/* Modernější tabulky */
+html,
+body {
+  height: 100%;
+  min-width: 100%;
+  overflow-x: auto;
+  font-family: "Arial", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.client-navbar {
+  background-color: #333;
+  color: white;
+  min-width: 100%;
+  position: relative;
+  z-index: 1050;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  min-width: 100%;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  background-color: #fff;
+}
+
 .table th,
 .table td {
   vertical-align: middle;
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 15px;
+}
+
+.table th {
+  background-color: #f8f8f8;
+  font-weight: 600;
+  color: #333;
+}
+
+.table td {
+  color: #444;
 }
 
 .table td img {
   max-width: 100%;
   height: auto;
+  border-radius: 4px;
+  display: block;
+}
+
+.table tr:hover {
+  background-color: #f4f4f4;
+}
+
+/* Responsive úpravy */
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .table {
+    min-width: unset;
+  }
+}
+
+@media (max-width: 480px) {
+  .table th,
+  .table td {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
 }

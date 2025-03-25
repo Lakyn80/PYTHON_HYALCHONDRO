@@ -1,0 +1,140 @@
+/* ========================================
+   📋 Stylový & Responzivní Orders Table
+   ======================================== */
+#orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px; /* zachování čitelnosti */
+  background-color: #fff;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+.order-success-container {
+  max-width: 600px;
+  margin: 60px auto;
+  background-color: #fff;
+  padding: 40px;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.order-success-container h2 {
+  color: #28a745;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.order-success-container p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.btn-back-home {
+  display: inline-block;
+  margin-top: 25px;
+  padding: 12px 20px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-back-home:hover {
+  background-color: #0056b3;
+}
+
+#orders-table th,
+#orders-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+#orders-table th {
+  background-color: #f4f4f4;
+  font-weight: 600;
+  color: #333;
+}
+
+#orders-table tr:hover {
+  background-color: #f8f8f8;
+}
+
+#orders-table input,
+#orders-table select {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 13px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Navbar container wrapper fix for responsiveness */
+.navbar-container {
+  overflow-x: auto;
+  width: 100%;
+}
+
+/* Stylish Sticky Navbar */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #007bff;
+  color: white;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* ✅ Responsive Breakpoints */
+@media (max-width: 768px) {
+  #orders-table {
+    font-size: 13px;
+    min-width: unset;
+    display: block;
+    overflow-x: auto;
+  }
+
+  #orders-table th,
+  #orders-table td {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .navbar {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  #orders-table th,
+  #orders-table td {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  #orders-table input,
+  #orders-table select {
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  .navbar {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+}

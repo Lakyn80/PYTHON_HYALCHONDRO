@@ -2,7 +2,7 @@ import os
 import matplotlib
 matplotlib.use('Agg')
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, send_file
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, send_file, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from app.models import db, AdminUser, Product, Order
@@ -74,10 +74,30 @@ def dashboard():
 def orders():
     if not session.get('admin_logged_in'):
         return redirect(url_for('admin.login'))
-    orders = Order.query.order_by(Order.created_at.desc()).all()
+    orders = Order.query.filter_by(is_visible=True).order_by(Order.created_at.desc()).all()  # ✅
     return render_template('admin/orders.html', orders=orders)
 
-# === PRODUKTY (products.html stránka pro výpis produktů) ===
+
+
+# ZMĚNA STAVU OBJEDNÁVKY (API AJAX)
+@admin_bp.route('/api/update-order-status', methods=['POST'])
+def api_update_order_status():
+    if not session.get('admin_logged_in'):
+        return jsonify({"success": False, "message": "Neautorizováno"}), 403
+
+    data = request.get_json()
+    order_id = data.get("order_id")
+    new_status = data.get("status")
+
+    order = Order.query.get(order_id)
+    if not order:
+        return jsonify({"success": False, "message": "Objednávka nenalezena"}), 404
+
+    order.status = new_status
+    db.session.commit()
+    return jsonify({"success": True, "message": f"Stav změněn na {new_status}"})
+
+# === PRODUKTY ===
 @admin_bp.route('/products')
 def products():
     if not session.get('admin_logged_in'):
@@ -85,8 +105,6 @@ def products():
     products = Product.query.all()
     return render_template('admin/products.html', products=products)
 
-
-# PŘIDÁNÍ PRODUKTU
 @admin_bp.route('/add-product', methods=['GET', 'POST'])
 def add_product():
     if not session.get('admin_logged_in'):
@@ -112,7 +130,6 @@ def add_product():
         return redirect(url_for('admin.dashboard'))
     return render_template('admin/add_product.html', form=form)
 
-# EDITACE PRODUKTU
 @admin_bp.route('/edit-product/<int:product_id>', methods=['GET', 'POST'])
 def edit_product(product_id):
     if not session.get('admin_logged_in'):
@@ -131,7 +148,6 @@ def edit_product(product_id):
         return redirect(url_for('admin.dashboard'))
     return render_template('admin/edit_product.html', form=form, product=product)
 
-# SMAZÁNÍ PRODUKTU
 @admin_bp.route('/delete-product/<int:product_id>', methods=['POST'])
 def delete_product(product_id):
     if not session.get('admin_logged_in'):
@@ -145,27 +161,40 @@ def delete_product(product_id):
 # EXPORT OBJEDNÁVEK
 @admin_bp.route('/export-orders')
 def export_orders():
-    orders = Order.query.all()
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('admin.login'))
+
+    # ✅ Smažeme staré soubory, pokud existují
+    for path in [csv_path, excel_path, pdf_path]:
+        if os.path.exists(path):
+            os.remove(path)
+
+    orders = Order.query.order_by(Order.created_at.desc()).all()
     data = []
+
     for order in orders:
+        print(f"🧾 Objednávka {order.id} – status: {order.status}")  # 🔍 konzolová kontrola
         data.append({
             "ID": order.id,
             "Číslo objednávky": f"ORD{order.id:03}",
             "Zákazník": order.name,
             "Email": order.email,
             "Adresa": order.address,
-            "Produkt": order.product.name,
+            "Produkt": order.product.name if order.product else "Neznámý produkt",
             "Množství": order.quantity,
             "Datum": order.created_at.strftime("%Y-%m-%d"),
             "Číslo faktury": f"F{order.id:03}",
-            "Stav": getattr(order, 'status', 'Nová')
+            "Stav": str(order.status) if order.status else "Neuvedeno"
         })
+
     df = pd.DataFrame(data)
 
+    # ✅ Uložíme CSV a Excel
     df.to_csv(csv_path, index=False)
     df.to_excel(excel_path, index=False)
 
-    fig, ax = plt.subplots(figsize=(18, len(df)*0.5 + 2))
+    # ✅ Vygenerujeme PDF
+    fig, ax = plt.subplots(figsize=(18, len(df) * 0.5 + 2))
     ax.axis('off')
     table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
     table.auto_set_font_size(False)
@@ -176,34 +205,36 @@ def export_orders():
         pdf.savefig(fig, bbox_inches='tight')
         plt.close()
 
-    flash("Exporty CSV, Excel a PDF byly vygenerovány.", "success")
+    flash("✅ Exporty CSV, Excel a PDF byly úspěšně vygenerovány.", "success")
     return redirect(url_for('admin.orders'))
 
-# STÁHNOUT EXPORT
+
 @admin_bp.route('/export-orders/<format>', methods=['POST'])
 def export_orders_route(format):
-    export_orders()
+    export_orders()  # ⚠️ Pozor – tohle přegeneruje všechny soubory
+
     file_map = {
         'csv': csv_path,
         'excel': excel_path,
         'pdf': pdf_path
     }
+
     file_to_send = file_map.get(format)
     if file_to_send and os.path.exists(file_to_send):
         return send_file(file_to_send, as_attachment=True)
     else:
-        flash("Soubor nelze stáhnout. Export selhal nebo neexistuje.", "error")
+        flash("❌ Soubor nelze stáhnout. Export selhal nebo neexistuje.", "error")
         return redirect(url_for("admin.orders"))
+    
 
-# ZMĚNA STAVU OBJEDNÁVKY
-@admin_bp.route('/update-order-status/<int:order_id>', methods=['POST'])
-def update_order_status(order_id):
-    if not session.get('admin_logged_in'):
-        return redirect(url_for('admin.login'))
-    order = Order.query.get_or_404(order_id)
-    new_status = request.form.get('status')
-    if new_status:
-        order.status = new_status
+@admin_bp.route('/api/hide-order', methods=['POST'])
+def api_hide_order():
+    data = request.get_json()
+    order_id = data.get("order_id")
+    order = Order.query.get(order_id)
+    if order:
+        order.is_visible = False
         db.session.commit()
-        flash(f'Stav objednávky ID {order.id} změněn na "{new_status}".', 'success')
-    return redirect(url_for('admin.orders'))
+        return jsonify({"success": True})
+    return jsonify({"success": False}), 404
+

@@ -18,14 +18,12 @@
     {% if not is_landing %}
     <nav class="client-navbar">
       <div class="navbar-container">
-        <div class="navbar-left">
-          
-        </div>
+        <div class="navbar-left"></div>
 
         <div class="navbar-right">
           <button class="navbar-toggle" id="navbarToggle">☰</button>
           <ul class="navbar-links" id="navbarLinks">
-            <li><a href="{{ url_for('client.index') }}">🏠 Domů</a></li>
+            <li><a href="{{ url_for('client.index') }}">Hyalchondro</a></li>
             <li><a href="{{ url_for('client.cart') }}">🛒 Košík</a></li>
             <li><a href="{{ url_for('client.checkout') }}">💳 Pokladna</a></li>
             <li><a href="{{ url_for('client.index') }}">📦 Produkty</a></li>
@@ -39,11 +37,11 @@
             </li>
             <li><a href="{{ url_for('client.profile') }}">👤 Profil</a></li>
             <li>
-              <a href="{{ url_for('client.logout_customer') }}">🚪 Odhlásit</a>
+              <a href="{{ url_for('client.logout_customer') }}">Odhlásit</a>
             </li>
             {% else %}
             <li>
-              <a href="{{ url_for('client.login_customer') }}">🔐 Přihlásit</a>
+              <a href="{{ url_for('client.login_customer') }}">Přihlásit</a>
             </li>
             <li>
               <a href="{{ url_for('client.register_customer') }}"
@@ -58,7 +56,7 @@
     {% endif %} {% if not is_landing %} {% with messages =
     get_flashed_messages(with_categories=true) %} {% if messages %} {% for
     category, message in messages %}
-    <div class="alert alert-{{ category }}">{{ message }}</div>
+    <div class="alert alert-{{ category }} flash-message">{{ message }}</div>
     {% endfor %} {% endif %} {% endwith %} {% endif %} {% block content %}{%
     endblock %}
 
@@ -68,15 +66,38 @@
         const links = document.getElementById("navbarLinks");
 
         if (toggle && links) {
-          links.classList.toggle("show");
-          toggle.classList.toggle("open");
+          // Ensure the navbar links are not toggled unintentionally on page load
+          toggle.classList.remove("open");
+          links.classList.remove("show");
         }
 
         toggle.addEventListener("click", function () {
           links.classList.toggle("show");
           toggle.classList.toggle("open");
         });
+
+        // ✅ Auto-hide flash messages after 2s
+        setTimeout(() => {
+          document.querySelectorAll(".flash-message").forEach((el) => {
+            el.style.transition = "opacity 0.5s ease";
+            el.style.opacity = "0";
+            setTimeout(() => el.remove(), 500);
+          });
+        }, 2000);
       });
     </script>
+
+    <script>
+      window.addEventListener("load", () => {
+        const table = document.querySelector(".table");
+        const navbar = document.querySelector(".navbar");
+        if (table && navbar) {
+          const tableWidth = table.scrollWidth;
+          navbar.style.minWidth = tableWidth + "px";
+        }
+      });
+    </script>
+
+    {% block content_scripts %}{% endblock %}
   </body>
 </html>

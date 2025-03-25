@@ -1,3 +1,6 @@
+/* =============================
+   💳 Profi Checkout Styling
+   ============================= */
 .checkout-page {
   background-color: #f8f9fa;
   min-height: 100vh;
@@ -18,23 +21,41 @@
 .checkout-container h1 {
   font-size: 2rem;
   margin-bottom: 30px;
+  text-align: center;
+  font-weight: bold;
+  color: #333;
 }
 
 .checkout-container label {
   display: block;
-  font-weight: bold;
+  font-weight: 600;
   margin-top: 15px;
+  margin-bottom: 5px;
 }
 
 .checkout-container input,
 .checkout-container textarea,
 .checkout-container select {
   width: 100%;
-  padding: 10px;
-  margin-top: 5px;
+  padding: 12px;
   font-size: 1rem;
   border-radius: 6px;
   border: 1px solid #ccc;
+  background-color: #fafafa;
+  transition: border-color 0.3s ease;
+}
+
+.checkout-container input:focus,
+.checkout-container textarea:focus,
+.checkout-container select:focus {
+  border-color: #007bff;
+  outline: none;
+  background-color: #fff;
+}
+
+.checkout-container textarea {
+  resize: vertical;
+  min-height: 100px;
 }
 
 .checkout-container button {
@@ -46,8 +67,82 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
 }
 
 .checkout-container button:hover {
   background-color: #0056b3;
+  transform: scale(1.02);
+}
+
+/* ✅ Order Summary Block (optional) */
+.order-summary {
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+.order-summary h3 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.order-summary p {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: #444;
+  display: flex;
+  justify-content: space-between;
+}
+
+.order-summary .total {
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+/* 📱 Responsive Breakpoints */
+@media (max-width: 768px) {
+  .checkout-container {
+    padding: 25px;
+  }
+
+  .checkout-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .checkout-container button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+
+  .order-summary p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkout-container {
+    padding: 20px;
+  }
+
+  .checkout-container h1 {
+    font-size: 1.3rem;
+  }
+
+  .checkout-container input,
+  .checkout-container textarea,
+  .checkout-container select {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .checkout-container button {
+    font-size: 0.9rem;
+  }
 }

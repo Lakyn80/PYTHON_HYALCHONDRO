@@ -30,15 +30,20 @@ class Product(db.Model):
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
-    address = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(120), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    address = db.Column(db.String(200), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
-    quantity = db.Column(db.Integer, nullable=False, default=1)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))  # 🔥 přidáno
+    quantity = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.now())
+    status = db.Column(db.String(50), default="Nová")
+    is_visible = db.Column(db.Boolean, default=True)
 
-    product = db.relationship('Product', backref='orders')
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
+    product = db.relationship("Product", backref="orders")
+    customer = db.relationship("Customer", backref="orders")  # 🔥 volitelné
+
+
 
 
 class Customer(db.Model):

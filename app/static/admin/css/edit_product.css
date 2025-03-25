@@ -1,5 +1,4 @@
-
-/* ===== Moderní Styl pro Admin Edit Product ===== */
+/* ===== Moderní Styl pro Admin Edit Product - RESPONSIVE READY ===== */
 .edit-product-container {
   max-width: 800px;
   margin: 40px auto;
@@ -7,7 +6,7 @@
   padding: 30px 40px;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
 
 .edit-product-container h2 {
@@ -61,3 +60,50 @@
   background-color: #0056b3;
 }
 
+/* 🔥 Responsive Breakpoints */
+@media (max-width: 992px) {
+  .edit-product-container {
+    padding: 25px 30px;
+    margin: 30px auto;
+  }
+
+  .edit-product-container h2 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .edit-product-container {
+    padding: 20px;
+    margin: 20px;
+  }
+
+  .edit-product-container h2 {
+    font-size: 22px;
+  }
+
+  .edit-product-container .btn {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .edit-product-container {
+    padding: 15px;
+  }
+
+  .edit-product-container h2 {
+    font-size: 20px;
+  }
+
+  .edit-product-container input,
+  .edit-product-container textarea {
+    font-size: 14px;
+  }
+
+  .edit-product-container .btn {
+    font-size: 15px;
+  }
+}

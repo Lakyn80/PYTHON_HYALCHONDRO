@@ -2,17 +2,37 @@
 block extra_css %}
 <link
   rel="stylesheet"
-  href="{{ url_for('static', filename='css/checkout.css') }}"
+  href="{{ url_for('static', filename='client/css/checkout.css') }}"
 />
 {% endblock %} {% block content %}
+<div class="checkout-page">
+  <div class="checkout-container">
+    <h1>Pokladna</h1>
+    <form method="POST">
+      {{ form.hidden_tag() }}
 
-<h2>Pokladna</h2>
-<form method="POST">
-  {{ form.hidden_tag() }}
-  <div>{{ form.name.label }} {{ form.name(size=40) }}</div>
-  <div>{{ form.email.label }} {{ form.email(size=40) }}</div>
-  <div>{{ form.address.label }} {{ form.address(rows=4, cols=40) }}</div>
-  <div>{{ form.payment_method.label }} {{ form.payment_method() }}</div>
-  <div>{{ form.submit() }}</div>
-</form>
+      <div>
+        <label>{{ form.name.label }}</label>
+        {{ form.name(class="form-control") }}
+      </div>
+
+      <div>
+        <label>{{ form.email.label }}</label>
+        {{ form.email(class="form-control") }}
+      </div>
+
+      <div>
+        <label>{{ form.address.label }}</label>
+        {{ form.address(class="form-control") }}
+      </div>
+
+      <div>
+        <label>{{ form.payment_method.label }}</label>
+        {{ form.payment_method(class="form-control") }}
+      </div>
+
+      <div>{{ form.submit(class="btn btn-primary") }}</div>
+    </form>
+  </div>
+</div>
 {% endblock %}

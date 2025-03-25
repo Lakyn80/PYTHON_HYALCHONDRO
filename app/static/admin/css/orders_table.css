@@ -1,8 +1,36 @@
+/* === STAV SELECT WRAPPER === */
+.status-wrapper {
+  display: inline-block;
+  min-width: 180px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+/* === Vnitřní SELECT === */
+.status-wrapper select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
+  font-weight: bold;
+  font-size: 14px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* === Styl pro celý wrapper tabulky === */
 .orders-wrapper {
   background: #fff;
   padding: 25px;
   border-radius: 8px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  overflow-x: auto;
 }
 
 .admin-table {
@@ -10,12 +38,14 @@
   border: 1px solid #ddd;
   width: 100%;
   border-collapse: collapse;
+  min-width: 600px;
 }
 
 .admin-table th,
 .admin-table td {
-  padding: 10px;
+  padding: 10px 12px;
   text-align: left;
+  white-space: nowrap;
 }
 
 .admin-table thead {
@@ -29,33 +59,76 @@ tfoot input {
   border-radius: 4px;
   border: 1px solid #ccc;
 }
-
-.badge {
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  color: #fff;
+.custom-status-dropdown {
+  position: relative;
+  display: inline-block;
+  min-width: 160px;
+  border-radius: 5px;
+  padding: 6px 10px;
+  cursor: pointer;
   font-weight: bold;
-  text-transform: capitalize;
+  user-select: none;
+  transition: background 0.2s ease;
+  /* ❌ žádný pevný background tady */
 }
 
-.badge-nová {
-  background-color: #17a2b8;
+.custom-status-dropdown ul.status-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 999;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  list-style: none;
+  margin: 5px 0 0 0;
+  padding: 0;
+  width: 100%;
 }
 
-.badge-zpracováno {
-  background-color: #ffc107;
-  color: #212529;
+.custom-status-dropdown ul.status-options li {
+  padding: 6px 10px;
+  cursor: pointer;
+  color: #004085;
 }
 
-.badge-vyřízeno {
-  background-color: #28a745;
+.custom-status-dropdown ul.status-options li:hover {
+  background-color: #f0f0f0;
 }
 
-.badge-stornováno {
-  background-color: #dc3545;
+.custom-status-dropdown.status-nova {
+  background: #e2e3e5;
+  color: #000;
+}
+.custom-status-dropdown.status-zpracovava-se {
+  background: #bee5eb;
+  color: #004085;
+}
+.custom-status-dropdown.status-odeslano {
+  background: #d4edda;
+  color: #155724;
+}
+.custom-status-dropdown.status-zruseno {
+  background: #f8d7da;
+  color: #721c24;
 }
 
-.badge-ostatní {
-  background-color: #6c757d;
+@media (max-width: 992px) {
+  .orders-wrapper {
+    padding: 20px;
+  }
+
+  .admin-table {
+    font-size: 13px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 8px 10px;
+  }
+
+  tfoot input {
+    font-size: 12px;
+  }
 }

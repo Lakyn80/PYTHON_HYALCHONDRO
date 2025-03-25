@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from app.models import db, Product, Order, Customer
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import CustomerLoginForm, CustomerRegisterForm, CheckoutForm
+from app.forms import CustomerLoginForm, CustomerRegisterForm, CheckoutForm, ProfileUpdateForm
 from flask_mail import Message
 from .extensions import mail
-from app.forms import ProfileUpdateForm
+from app.tokens import generate_reset_token, verify_reset_token
+from app.email import send_reset_email
 
 client_bp = Blueprint('client', __name__)
 
@@ -18,8 +19,7 @@ def index():
 def redirect_to_product():
     return redirect(url_for('client.product_detail', product_id=1))
 
-
-# REGISTRACE ZÁKAZNÍKA
+# REGISTRACE ZAKAZNIKA
 @client_bp.route('/register', methods=['GET', 'POST'])
 def register_customer():
     form = CustomerRegisterForm()
@@ -36,7 +36,7 @@ def register_customer():
         return redirect(url_for('client.login_customer'))
     return render_template('client/register.html', form=form)
 
-# PŘIHLÁŠENÍ ZÁKAZNÍKA
+# LOGIN ZAKAZNIKA + RESET FORM V TEMPLATE
 @client_bp.route('/login', methods=['GET', 'POST'])
 def login_customer():
     form = CustomerLoginForm()
@@ -52,14 +52,60 @@ def login_customer():
             flash('Neplatné přihlašovací údaje.', 'danger')
     return render_template('client/login.html', form=form)
 
-# ODHLÁŠENÍ
+# RESET PASSWORD REQUEST Z LOGIN TEMPLATE
+@client_bp.route("/reset_password-request", methods=["POST"])
+def reset_password_request():
+    email = request.form.get("reset_email")
+    if not email:
+        flash("Email je povinný", "error")
+        return redirect(url_for("client.login_customer"))
+
+    user = Customer.query.filter_by(email=email).first()
+    if user:
+        token = generate_reset_token(user)
+        reset_link = url_for('client.reset_password', token=token, _external=True)
+        send_reset_email(user.email, reset_link)
+        flash("Odkaz pro obnovení hesla byl odeslán na váš email.", "success")
+    else:
+        flash("Uživatel s tímto emailem neexistuje.", "error")
+    return redirect(url_for("client.login_customer"))
+
+# RESET HESLA
+@client_bp.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    user = verify_reset_token(token)
+    if not user:
+        flash('Neplatný nebo vypršený token.', 'error')
+        return redirect(url_for('client.login_customer'))
+
+    if request.method == 'POST':
+        password = request.form.get('password')
+        confirm = request.form.get('confirm_password')
+
+        if not password or not confirm:
+            flash('Všechna pole jsou povinná.', 'error')
+            return redirect(request.url)
+
+        if password != confirm:
+            flash('Hesla se neshodují.', 'error')
+            return redirect(request.url)
+
+        user.password = generate_password_hash(password)
+        db.session.commit()
+        flash('Heslo bylo úspěšně změněno.', 'success')
+        return redirect(url_for('client.login_customer'))
+
+    return render_template('client/reset_password.html', token=token)
+
+
+# ODHLASENI
 @client_bp.route('/logout')
 def logout_customer():
     session.clear()
     flash('Odhlášení úspěšné.', 'success')
     return redirect(url_for('client.index'))
 
-# OBJEDNÁVKY ZÁKAZNÍKA
+# OBJEDNAVKY
 @client_bp.route('/account/orders')
 def customer_orders():
     if not session.get('customer_logged_in') or 'customer_id' not in session:
@@ -74,9 +120,13 @@ def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
     return render_template('client/product.html', product=product)
 
-# PŘIDAT DO KOŠÍKU
+# PRIDANI DO KOSIKU
 @client_bp.route('/add-to-cart/<int:product_id>', methods=['POST'])
 def add_to_cart(product_id):
+    if not session.get('customer_logged_in'):
+        flash('Pro přidání do košíku se musíte přihlásit.', 'warning')
+        return redirect(url_for('client.login_customer'))
+
     quantity = int(request.form.get('quantity', 1))
     cart = session.get('cart', {})
     cart[str(product_id)] = cart.get(str(product_id), 0) + quantity
@@ -84,7 +134,7 @@ def add_to_cart(product_id):
     flash('Produkt byl přidán do košíku.', 'success')
     return redirect(url_for('client.cart'))
 
-# ZOBRAZENÍ KOŠÍKU
+# ZOBRAZENI KOSIKU
 @client_bp.route('/cart')
 def cart():
     cart = session.get('cart', {})
@@ -98,7 +148,7 @@ def cart():
             total += subtotal
     return render_template('client/cart.html', products=items, total_price=total)
 
-# AKTUALIZACE KOŠÍKU
+# UPDATE KOSIKU
 @client_bp.route('/update-cart', methods=['POST'])
 def update_cart():
     cart = session.get('cart', {})
@@ -110,7 +160,7 @@ def update_cart():
     flash('Košík byl aktualizován.', 'success')
     return redirect(url_for('client.cart'))
 
-# ODEBRÁNÍ Z KOŠÍKU
+# ODEBRANI Z KOSIKU
 @client_bp.route('/remove-from-cart/<int:product_id>')
 def remove_from_cart(product_id):
     cart = session.get('cart', {})
@@ -122,10 +172,15 @@ def remove_from_cart(product_id):
 # CHECKOUT
 @client_bp.route('/checkout', methods=['GET', 'POST'])
 def checkout():
+    if not session.get('customer_logged_in'):
+        flash('Pro pokračování k pokladně se musíte přihlásit.', 'warning')
+        return redirect(url_for('client.login_customer'))
+
     cart = session.get('cart', {})
     if not cart:
         flash('Košík je prázdný.', 'error')
         return redirect(url_for('client.cart'))
+
     form = CheckoutForm()
     if form.validate_on_submit():
         for pid, qty in cart.items():
@@ -145,14 +200,17 @@ def checkout():
         session.pop('cart', None)
         flash('Objednávka úspěšně dokončena.', 'success')
         return redirect(url_for('client.order_success'))
+
     return render_template('client/checkout.html', form=form)
 
-# OBJEDNÁVKA DOKONČENA
+
+# OBJEDNAVKA DOKONCENA
 @client_bp.route('/order-success')
 def order_success():
     return render_template('client/order_success.html')
 
-# EMAIL FUNKCE
+# EMAIL POTVRZENI OBJEDNAVKY
+
 def send_order_email(email, name):
     msg = Message("Potvrzení objednávky", recipients=[email])
     msg.body = f"Dobrý den {name},\n\nDěkujeme za Vaši objednávku."
@@ -162,10 +220,7 @@ def send_order_email(email, name):
     except Exception as e:
         print(f"❌ Email chyba: {e}")
 
-
-
-from app.forms import ProfileUpdateForm
-
+# PROFIL ZÁKAZNÍKA
 @client_bp.route('/account/profile', methods=['GET', 'POST'])
 def profile():
     if not session.get('customer_logged_in'):
@@ -186,5 +241,3 @@ def profile():
         return redirect(url_for('client.profile'))
 
     return render_template('client/profile.html', customer=customer, form=form)
-
-

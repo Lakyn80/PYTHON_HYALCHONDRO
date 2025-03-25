@@ -6,15 +6,19 @@ body.landing {
   background-size: cover;
   font-family: Arial, sans-serif;
   color: white;
+  overflow-x: hidden; /* Zabrání horizontálnímu scrollu */
 }
 
-/* CTA kontejner uprostřed (zůstává pro hlavní středovou výzvu) */
+/* CTA kontejner uprostřed */
 .cta-container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
+  padding: 20px;
+  width: 90%;
+  max-width: 800px;
 }
 
 /* Tlačítko CTA */
@@ -22,17 +26,22 @@ body.landing {
   display: inline-block;
   margin-top: 20px;
   padding: 15px 30px;
-  background-color: #ffffff;
-  color: #000;
+  background: linear-gradient(90deg, #4caf50, #2196f3);
+  color: white;
   text-decoration: none;
   font-size: 18px;
+  font-family: Poppins, sans-serif;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
   border-radius: 30px;
-  transition: 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .cta-btn:hover {
-  background-color: #e0e0e0;
-  color: #333;
+  transform: scale(1.1);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(90deg, #2196f3, #4caf50);
 }
 
 /* Login odkazy vpravo nahoře */
@@ -42,6 +51,9 @@ body.landing {
   right: 30px;
   font-size: 16px;
   color: white;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .login-links a {
@@ -54,13 +66,14 @@ body.landing {
   text-decoration: underline;
 }
 
-/* 📦 NOVÝ blok CTA textu + tlačítka napravo nahoře */
+/* CTA vpravo nahoře */
 .cta-top-right {
   position: absolute;
   top: 80px;
   right: 50px;
   text-align: right;
   z-index: 100;
+  max-width: 300px;
 }
 
 .cta-top-right h2 {
@@ -68,7 +81,7 @@ body.landing {
   font-size: 20px;
   color: white;
   font-family: Poppins, sans-serif;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Přidání stínu textu */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .cta-top-right .cta-btn {
@@ -89,53 +102,92 @@ body.landing {
   color: #333;
 }
 
-.cta-btn {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 15px 30px;
-  background: linear-gradient(90deg, #4caf50, #2196f3); /* Gradientní pozadí */
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  font-family: Poppins, sans-serif;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Přidání stínu textu */
-  font-weight: bold;
-  border-radius: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Jemný stín */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Přechod pro efekty */
-}
-
-.cta-btn:hover {
-  transform: scale(1.1); /* Zvětšení při najetí */
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Zvýraznění stínu */
-  background: linear-gradient(90deg, #2196f3, #4caf50); /* Obrácený gradient */
-}
+/* Nadpis */
 h1 {
   font-size: 60px;
   margin: 0;
   font-family: Poppins, sans-serif;
   color: rgb(37, 195, 44);
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Přidání stínu textu */
   background: linear-gradient(
     90deg,
     rgb(93, 4, 4),
-    /* Bílá barva na začátku */ rgb(219, 18, 45),
+    rgb(219, 18, 45),
     rgb(202, 232, 6),
-    rgb(255, 255, 255) /* Bílá barva na konci */
-  ); /* Přechod barev */
+    rgb(255, 255, 255)
+  );
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent; /* Efekt přechodu na textu */
-  animation: glow 3s infinite alternate; /* Animace */
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  animation: glow 3s infinite alternate;
 }
 
 @keyframes glow {
   from {
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5), 0 0 15px rgb(255, 255, 255),
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5), 0 0 15px white,
       0 0 25px rgb(151, 5, 24), 0 0 35px rgb(0, 128, 255);
   }
   to {
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5), 0 0 20px rgb(255, 255, 255),
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5), 0 0 20px white,
       0 0 30px rgb(0, 128, 255), 0 0 40px rgb(219, 18, 45);
+  }
+}
+
+/* 📱 RESPONSIVE MEDIA QUERIES */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 40px;
+  }
+
+  .cta-btn {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+
+  .cta-top-right {
+    position: static;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .cta-top-right h2 {
+    font-size: 18px;
+  }
+
+  .login-links {
+    position: static;
+    justify-content: center;
+    margin-top: 15px;
+  }
+
+  .cta-container {
+    top: 55%;
+    transform: translate(-50%, -55%);
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 30px;
+  }
+
+  .cta-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  .cta-top-right .cta-btn {
+    font-size: 14px;
+    padding: 8px 18px;
+  }
+
+  .cta-container {
+    top: 60%;
+    transform: translate(-50%, -60%);
+  }
+
+  .login-links a {
+    font-size: 14px;
+    margin-left: 10px;
   }
 }

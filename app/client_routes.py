@@ -6,6 +6,9 @@ from flask_mail import Message
 from .extensions import mail
 from app.tokens import generate_reset_token, verify_reset_token
 from app.email import send_reset_email
+from flask import send_file
+from app.utils.pdf_generator import generate_invoice_pdf
+
 
 client_bp = Blueprint('client', __name__)
 
@@ -183,6 +186,7 @@ def checkout():
 
     form = CheckoutForm()
     if form.validate_on_submit():
+        orders = []
         for pid, qty in cart.items():
             product = Product.query.get(int(pid))
             if product:
@@ -195,13 +199,26 @@ def checkout():
                     customer_id=session.get('customer_id')
                 )
                 db.session.add(order)
+                orders.append(order)
+
         db.session.commit()
-        send_order_email(email=form.email.data, name=form.name.data)
+
+        # ✅ PDF faktura
+        invoice_pdf = generate_invoice_pdf(orders[0])
+
+        # ✅ Odeslání e-mailem
+        send_order_email(
+            email=form.email.data,
+            name=form.name.data,
+            invoice_pdf=invoice_pdf
+        )
+
         session.pop('cart', None)
         flash('Objednávka úspěšně dokončena.', 'success')
         return redirect(url_for('client.order_success'))
 
     return render_template('client/checkout.html', form=form)
+
 
 
 # OBJEDNAVKA DOKONCENA
@@ -211,14 +228,22 @@ def order_success():
 
 # EMAIL POTVRZENI OBJEDNAVKY
 
-def send_order_email(email, name):
+def send_order_email(email, name, invoice_pdf):
     msg = Message("Potvrzení objednávky", recipients=[email])
     msg.body = f"Dobrý den {name},\n\nDěkujeme za Vaši objednávku."
+
+    msg.attach(
+        filename="faktura.pdf",
+        content_type="application/pdf",
+        data=invoice_pdf.getvalue()
+    )
+
     try:
         mail.send(msg)
-        print("✅ Email odeslán")
+        print("✅ Email s fakturou odeslán")
     except Exception as e:
         print(f"❌ Email chyba: {e}")
+
 
 # PROFIL ZÁKAZNÍKA
 @client_bp.route('/account/profile', methods=['GET', 'POST'])

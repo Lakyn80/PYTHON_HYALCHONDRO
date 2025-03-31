@@ -11,6 +11,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from datetime import datetime
+from app.models import TelegramLead 
 
 EXPORT_FOLDER = os.path.join(os.path.dirname(__file__), '..', 'exports')
 os.makedirs(EXPORT_FOLDER, exist_ok=True)
@@ -238,3 +239,11 @@ def api_hide_order():
         return jsonify({"success": True})
     return jsonify({"success": False}), 404
 
+ # doplň správně podle struktury
+
+@admin_bp.route('/telegram-leads')
+def telegram_leads():
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('admin.login'))
+    leads = TelegramLead.query.order_by(TelegramLead.created_at.desc()).all()
+    return render_template('admin/telegram_leads.html', leads=leads)

@@ -10,6 +10,8 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+   
+    </li>
 
     <style>
       html,
@@ -118,6 +120,11 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('admin.telegram_leads') }}"
+            >Telegram kontakty</a
+          >
+        </li>
 
         <div class="collapse navbar-collapse" id="adminNavbar">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -130,6 +137,10 @@
               <a class="nav-link" href="{{ url_for('admin.orders') }}"
                 >Objednávky</a
               >
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin.telegram_leads') }}">Telegram kontakty</a>
+            </li>
+            
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('admin.products') }}"
@@ -169,8 +180,6 @@
       </div>
       {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
     </div>
-
-  
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

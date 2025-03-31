@@ -120,7 +120,7 @@ os.makedirs("app", exist_ok=True)
 with open("run.py", "w", encoding="utf-8") as f:
     f.write(run_py.strip())
 
-with open("config.py", "w", encoding="utf-8") as f:
+with open("app/config.py", "w", encoding="utf-8") as f:
     f.write(config_py.strip())
 
 with open("app/__init__.py", "w", encoding="utf-8") as f:

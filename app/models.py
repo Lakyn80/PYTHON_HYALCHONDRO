@@ -2,6 +2,7 @@ from .extensions import db
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
+from datetime import datetime
 
 class AdminUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -55,5 +56,12 @@ class Customer(db.Model):
     address = db.Column(db.String(255))  # <- Přidáno
     phone = db.Column(db.String(50))     # <- Přidáno
 
+class TelegramLead(db.Model):
+    __tablename__ = 'telegram_leads'
 
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(100))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from dotenv import load_dotenv
-from config import Config
+from app.config import Config  # Update import path
 from .extensions import db, mail, migrate
 from app.admin_routes import admin_bp
 from app.client_routes import client_bp
